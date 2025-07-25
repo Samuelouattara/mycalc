@@ -1,17 +1,39 @@
+'use client';
+
 import MainContent from "@/components/dashboardLayout/MainContent";
+import ContentTitle from "@/components/shared/contentTitle";
+import DashboardIcon from "@/components/ui/icones/dashboardIcon";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const viewMyCalculs = () => {
+    router.push('/mes-calculs');
+  }
+
+  const makeCalculation = () => {
+    router.push('/calculer');
+  }
+
+  const actions: {
+    label: string;
+    onClick: () => void;
+    variant: 'primary' | 'secondary';
+  }[] = [
+    {
+      label: 'Faire un calcul',
+      onClick: makeCalculation,
+      variant: 'primary' as const
+    },
+    {
+      label: 'Voir mes calculs',
+      onClick: viewMyCalculs,
+      variant: 'secondary' as const
+    }
+  ]
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Plan, prioritize, and accomplish your tasks with ease.</p>
-      </div>
-      
-      <div className="bg-white p-6 rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Bienvenue sur <span className="text-green-600">MyCalc</span></h2>
-        <p className="text-gray-600">Votre tableau de bord est en cours de développement.</p>
-      </div>
+      <ContentTitle title="Dashboard" description="Bienvenue sur MyCalc" icon={<DashboardIcon />} actions={actions} />
     </div>
   );
 }
