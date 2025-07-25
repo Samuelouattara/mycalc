@@ -1,6 +1,10 @@
 import Link from "next/link";
 import LogoIcon from "../ui/icones/logoIcon";
-import DashboardIcon from "../ui/icones/dashboardIcon";
+import DashboardIcon from "../ui/icones/DashboardIcon";
+import CalculerIcon from "../ui/icones/calculerIcon";
+import SettingsIcon from "../ui/icones/settingsIcon";
+import HistoryIcon from "../ui/icones/historyIcon";
+import UsersIcon from "../ui/icones/usersIcon";
 
 
 const menuItems = [
@@ -15,20 +19,20 @@ const menuItems = [
         id: 2,
         label: "Calculer",
         href: "/calculer",
-        // icon: CalculatorIcon,
+        icon: <CalculerIcon />,
         badge: "12+"
     },
     {
         id: 3,
         label: "Mes calculs",
         href: "/mes-calculs",
-        // icon: HistoryIcon
+        icon: <HistoryIcon />
     },
     {
         id: 4,
         label: "Utilisateurs",
         href: "/utilisateurs",
-        // icon: UsersIcon
+        icon: <UsersIcon />
     }
 ];
 
@@ -37,20 +41,8 @@ const generalItems = [
         id: 1,
         label: "Settings",
         href: "/settings",
-        // icon: SettingsIcon
+        icon: <SettingsIcon />
     },
-    {
-        id: 2,
-        label: "Help",
-        href: "/help",
-        icon: "❓"
-    },
-    {
-        id: 3,
-        label: "Logout",
-        href: "/logout",
-        icon: "🚪"
-    }
 ];
 
 interface LinkSidebarProps {    
@@ -84,7 +76,7 @@ export default function SideBar() {
             <div className="pt-10">
                 <p className="text-black text-base font-semibold">MENU</p>
                 {/* liens de navigation  */}
-                <div>
+                <div className="flex flex-col gap-4 pt-2">
                     {menuItems.map((item) => (  
                         <LinkSidebar href={item.href} label={item.label} key={item.id} icon={item.icon} />
                     ))}
