@@ -6,7 +6,10 @@ import CalculerIcon from "../ui/icones/calculerIcon";
 import SettingsIcon from "../ui/icones/settingsIcon";
 import HistoryIcon from "../ui/icones/historyIcon";
 import UsersIcon from "../ui/icones/usersIcon";
-import DashboardIcon from "../ui/icones/dashboardIcon";
+
+import PersonIcon from "../ui/icones/personIcon";
+import SearchIcon from "../ui/icones/searchIcon";
+import DashboardIcon from "../ui/icones/DashboardIcon";
 
 const menuItems = [
     {
