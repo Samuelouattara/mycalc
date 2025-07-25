@@ -6,10 +6,7 @@ import CalculerIcon from "../ui/icones/calculerIcon";
 import SettingsIcon from "../ui/icones/settingsIcon";
 import HistoryIcon from "../ui/icones/historyIcon";
 import UsersIcon from "../ui/icones/usersIcon";
-
-import PersonIcon from "../ui/icones/personIcon";
-import SearchIcon from "../ui/icones/searchIcon";
-import DashboardIcon from "../ui/icones/DashboardIcon";
+import DashboardIcon from "../ui/icones/dashboardIcon";
 
 const menuItems = [
     {
@@ -56,6 +53,7 @@ interface LinkSidebarProps {
     badge?: string;
 }
 
+// lien pour les pages
 const LinkSidebar = ({ href, label, icon, isActive = false, badge }: LinkSidebarProps) => {
     return (
         <Link href={href}>
@@ -93,12 +91,10 @@ export default function SideBar() {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col h-full w-80 bg-white p-6 rounded-xl shadow-sm">
+        <div className="flex flex-col w-80 bg-[#F7F7F7] p-6 rounded-xl shadow-sm">
             {/* Logo de mycalc  */}
             <div className="flex items-center gap-3 mb-8">
-                <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 bg-white rounded-full"></div>
-                </div>
+                <LogoIcon />
                 <p className="text-gray-800 text-xl font-bold">MyCalc</p>
             </div>
 

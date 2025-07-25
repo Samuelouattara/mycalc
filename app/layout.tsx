@@ -24,10 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-sans antialiased`}>
-        <div className="flex h-screen bg-gray-50">
+      <body className={`${poppins.variable} font-sans antialiased bg-white`}>
+        <div className="flex h-screen p-4 space-x-4">
           <SideBar />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col space-y-4">
             <Navbar />
             <MainContent>
               {children}

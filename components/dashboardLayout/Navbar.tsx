@@ -16,8 +16,7 @@ export default function Navbar() {
     };
 
     return (
-        //search bar
-        <div className="flex items-center justify-between p-4 bg-white shadow-md">
+        <div className="w-full flex flex-row items-center justify-between p-4 bg-[#F7F7F7] rounded-xl shadow-sm">
             <div className="relative">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <SearchIcon />
@@ -33,7 +32,7 @@ export default function Navbar() {
                 <Notification />
                 <PersonIcon />
                 <div className="relative">
-                    <button 
+                    <button
                         onClick={toggleDropdown}
                         className="font-semibold group relative border-blue-500 border-2 rounded-md px-3 py-1 hover:bg-blue-50 transition-colors flex items-center space-x-2"
                     >
@@ -42,7 +41,7 @@ export default function Navbar() {
                             <Dropdown />
                         </div>
                     </button>
-                    
+
                     {isDropdownOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                             <div className="py-1">
@@ -50,10 +49,10 @@ export default function Navbar() {
                                     Profile
                                 </a>
                                 <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Sign out 
+                                    Sign out
                                 </a>
                                 <hr className="my-1" />
-                                
+
                             </div>
                         </div>
                     )}
