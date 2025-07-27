@@ -4,7 +4,7 @@ import PersonIcon from "../ui/icones/personIcon";
 import SearchIcon from "../ui/icones/searchIcon";
 import Notification from "../ui/icones/notification";
 import MessageIcon from "../ui/icones/message";
-
+import CtrlFIcon from "../ui/icones/CtrlFIcon";
 import { useState } from "react";
 import Dropdown from "../ui/icones/dropdown";
 
@@ -16,27 +16,44 @@ export default function Navbar() {
     };
 
     return (
-        <div className="w-full flex flex-row items-center justify-between p-4 bg-[#F7F7F7] rounded-xl shadow-sm">
-            <div className="relative">
+        <div className="w-full flex flex-row items-center justify-between p-4 bg-white shadow-sm border-b border-gray-100">
+            {/* Barre de recherche avec Ctrl+F */}
+            <div className="relative max-w-md">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <SearchIcon />
                 </div>
                 <input
                     type="text"
-                    placeholder="Search..."
-                    className="border rounded-lg pl-10 pr-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Search task"
+                    className="w-full bg-gray-50 border-0 rounded-lg pl-10 pr-16 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:bg-white"
                 />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <CtrlFIcon />
+                </div>
             </div>
+
+            {/* Section droite avec icônes et utilisateur */}
             <div className="flex items-center space-x-4">
-                <MessageIcon />
-                <Notification />
-                <PersonIcon />
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <MessageIcon />
+                </button>
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <Notification />
+                </button>
+                
+                {/* Profil utilisateur */}
                 <div className="relative">
                     <button
                         onClick={toggleDropdown}
-                        className="font-semibold group relative border-blue-500 border-2 rounded-md px-3 py-1 hover:bg-blue-50 transition-colors flex items-center space-x-2"
+                        className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors"
                     >
-                        <span>Samuel Otr</span>
+                        <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center">
+                            <PersonIcon />
+                        </div>
+                        <div className="text-left">
+                            <div className="text-sm font-medium text-gray-900">Samuel Otr</div>
+                            <div className="text-xs text-gray-500">samuelotr@gmail.com</div>
+                        </div>
                         <div className={`transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
                             <Dropdown />
                         </div>
@@ -52,7 +69,6 @@ export default function Navbar() {
                                     Sign out
                                 </a>
                                 <hr className="my-1" />
-
                             </div>
                         </div>
                     )}
