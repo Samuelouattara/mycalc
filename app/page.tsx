@@ -2,7 +2,7 @@
 
 import MainContent from "@/components/dashboardLayout/MainContent";
 import ContentTitle from "@/components/shared/contentTitle";
-import DashboardIcon from "@/components/ui/icones/DashboardIcon";
+import DashboardIcon from "@/components/ui/icones/dashboardIcon";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
