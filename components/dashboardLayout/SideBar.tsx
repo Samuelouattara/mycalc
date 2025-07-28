@@ -64,14 +64,14 @@ const LinkSidebar = ({ href, label, icon, isActive = false, badge }: LinkSidebar
                 }`}>
                 {/* Barre verte pour l'état actif */}
                 {isActive && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-sm"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#1C274D] rounded-r-sm"></div>
                 )}
 
                 <div className="flex items-center gap-3 pl-2">
-                    <div className={`${isActive ? 'text-green-600' : 'text-gray-500'}`}>
+                    <div className={`${isActive ? 'text-[#1C274D]' : 'text-gray-500'}`}>
                         {icon}
                     </div>
-                    <span className={`text-sm font-medium ${isActive ? 'text-green-600 font-semibold' : 'text-gray-600'
+                    <span className={`text-sm font-medium ${isActive ? 'text-[#1C274D] font-semibold' : 'text-gray-600'
                         }`}>
                         {label}
                     </span>
@@ -79,7 +79,7 @@ const LinkSidebar = ({ href, label, icon, isActive = false, badge }: LinkSidebar
 
                 {/* Badge de notification */}
                 {badge && (
-                    <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-md font-medium">
+                    <div className="bg-[#1C274D] text-white text-xs px-2 py-1 rounded-md font-medium">
                         {badge}
                     </div>
                 )}
