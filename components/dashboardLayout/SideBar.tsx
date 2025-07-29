@@ -33,7 +33,7 @@ const menuItems = [
         label: "Utilisateurs",
         href: "/utilisateurs",
         icon: <UsersIcon />
-    }
+    },
 ];
 
 const generalItems = [

@@ -1,8 +1,11 @@
 'use client'
 
-
+import { create } from 'zustand';
 export type SidebarState = 'expanded' | 'collapsed' | 'hidden';
 export type DeviceType = 'mobile' | 'tablet' | 'desktop' | 'large-desktop';
+
+
+
 
 interface SidebarStore {
     sidebarState: SidebarState;
