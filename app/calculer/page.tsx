@@ -2,13 +2,15 @@
 
 import React from 'react'
 import ContentTitle from '@/components/shared/contentTitle'
-import { useCalcul } from './useCalcul'
+import { useCalcul } from '../../hooks/useCalcul'
 import CalculatorIcon from '@/components/ui/icones/calculatorIcon'
 import { useRouter } from 'next/navigation'
+import { useResponsive } from '@/hooks/useResponsive'
 
 export default function Page() {
   const router = useRouter();
   const { display, result, history, buttons, handleButtonClick, handleDelete, clearHistory, getButtonStyle } = useCalcul()
+  const { isMobile, isTablet} = useResponsive()
 
   const viewMyCalculs = () => {
     router.push('/mes-calculs');
@@ -30,7 +32,7 @@ export default function Page() {
     <div className="flex flex-col h-full">
       <ContentTitle title="Calculatrice" description="Effectuez vos calculs avec facilité" icon={<CalculatorIcon className="w-6 h-6" />} actions={actions} />
 
-      <div className="flex-1 flex gap-6 p-6">
+      <div className={`flex-1 flex gap-6 p-6 ${isMobile || isTablet ? 'flex-col' : ''}`}>
         {/* Clavier de la calculatrice - à gauche */}
         <div className="flex-1 max-w-2xl">
           <div className="grid grid-cols-6 gap-2">

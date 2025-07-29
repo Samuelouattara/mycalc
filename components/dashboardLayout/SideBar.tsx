@@ -6,14 +6,14 @@ import CalculerIcon from "../ui/icones/calculerIcon";
 import SettingsIcon from "../ui/icones/settingsIcon";
 import HistoryIcon from "../ui/icones/historyIcon";
 import UsersIcon from "../ui/icones/usersIcon";
-import DashboardIcon from "../ui/icones/DashboardIcon";
+import IconDashboard from "../ui/icones/IconDashboard";
 
 const menuItems = [
     {
         id: 1,
         label: "Dashboard",
         href: "/",
-        icon: <DashboardIcon />
+        icon: <IconDashboard />
     },
     {
         id: 2,
@@ -43,6 +43,12 @@ const generalItems = [
         href: "/settings",
         icon: <SettingsIcon />
     },
+    {
+        id: 2,
+        label: "TestSTore",
+        href: "/test-store",
+        icon: <IconDashboard />
+    },
 ];
 
 interface LinkSidebarProps {
@@ -58,8 +64,8 @@ const LinkSidebar = ({ href, label, icon, isActive = false, badge }: LinkSidebar
     return (
         <Link href={href}>
             <div className={`relative flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${isActive
-                    ? 'bg-white shadow-sm'
-                    : 'hover:bg-gray-50'
+                ? 'bg-white shadow-sm'
+                : 'hover:bg-gray-50'
                 }`}>
                 {/* Barre verte pour l'état actif */}
                 {isActive && (
