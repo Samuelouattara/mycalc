@@ -129,10 +129,15 @@ export const useCalcul = () => {
 
   const handleKeyPress = (event: KeyboardEvent) => {
     const key = event.key
+    
+    if (key === 'Backspace') {
+      handleDelete()
+      return
+    }
+    
     const keyMap: { [key: string]: string } = {
       'Enter': '=',
       'Escape': 'C',
-      'Backspace': 'CE',
       '*': '×',
       '/': '/',
       '+': '+',

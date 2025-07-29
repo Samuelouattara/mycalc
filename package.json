@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-table": "^8.21.3",
     "next": "15.4.4",
     "nextjs-toploader": "^3.8.16",
     "react": "19.1.0",

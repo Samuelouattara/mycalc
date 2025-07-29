@@ -65,9 +65,13 @@ export default function Navbar() {
                                 <a href="/utilisateurs" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Profile
                                 </a>
-                                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Sign out
+                                <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Paramètres du Compte
                                 </a>
+                                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Se déconnecter
+                                </a>
+                                
                                 <hr className="my-1" />
                             </div>
                         </div>
