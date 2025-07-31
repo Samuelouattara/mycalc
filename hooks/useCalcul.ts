@@ -13,6 +13,33 @@ export const useCalcul = () => {
   const [pressedKey, setPressedKey] = useState<string | null>(null)
   const [history, setHistory] = useState<CalculHistory[]>([])
 
+  // Fonction pour calculer automatiquement le résultat
+  const calculateResult = (expression: string) => {
+    if (expression === '0' || expression === '' || expression === 'Erreur') {
+      setResult('')
+      return
+    }
+
+    // Vérifier si l'expression contient une opération et se termine par un nombre
+    const hasOperation = expression.includes('+') || expression.includes('-') || expression.includes('×') || expression.includes('/')
+    const endsWithNumber = /\d$/.test(expression)
+    
+    if (hasOperation && endsWithNumber) {
+      try {
+        const calculatedResult = evaluateExpression(expression)
+        if (calculatedResult !== 'Erreur' && calculatedResult !== 'Opération non supportée') {
+          setResult(calculatedResult)
+        } else {
+          setResult('')
+        }
+      } catch (error) {
+        setResult('')
+      }
+    } else {
+      setResult('')
+    }
+  }
+
   const buttons = [
     ['C', 'CE', '(', ')', '√', 'x²'],
     ['sin', 'cos', 'tan', 'ln', 'log', '^'],
@@ -36,25 +63,28 @@ export const useCalcul = () => {
     setPressedKey(value)
     setTimeout(() => setPressedKey(null), 150)
     
+    let newDisplay = display
+    
     switch (value) {
       case 'C':
-        setDisplay('0')
+        newDisplay = '0'
+        setDisplay(newDisplay)
         setResult('')
-        break
+        return
       case 'CE':
-        setDisplay('0')
-        break
+        newDisplay = '0'
+        setDisplay(newDisplay)
+        setResult('')
+        return
       case '=':
-        try {
-          // Logique de calcul à implémenter plus tard
-          const calculatedResult = evaluateExpression(display)
-          setResult(calculatedResult)
-          addToHistory(display, calculatedResult)
-          console.log('Calcul effectué:', display, '=', calculatedResult)
-        } catch (error) {
-          setResult('Erreur')
+        // Garder la fonctionnalité du bouton = pour ajouter à l'historique
+        if (result && result !== '') {
+          addToHistory(display, result)
+          setDisplay(result)
+          setResult('')
+          console.log('Ajouté à l\'historique:', display, '=', result)
         }
-        break
+        return
       case 'sin':
       case 'cos':
       case 'tan':
@@ -62,69 +92,128 @@ export const useCalcul = () => {
       case 'log':
       case 'abs':
         if (display === '0') {
-          setDisplay(value + '(')
+          newDisplay = value + '('
         } else {
-          setDisplay(display + value + '(')
+          newDisplay = display + value + '('
         }
         break
       case '√':
         if (display === '0') {
-          setDisplay('√(')
+          newDisplay = '√('
         } else {
-          setDisplay(display + '√(')
+          newDisplay = display + '√('
         }
         break
       case 'x²':
-        setDisplay(display + '²')
+        newDisplay = display + '²'
         break
       case '^':
-        setDisplay(display + '^')
+        newDisplay = display + '^'
         break
       case 'π':
         if (display === '0') {
-          setDisplay('π')
+          newDisplay = 'π'
         } else {
-          setDisplay(display + 'π')
+          newDisplay = display + 'π'
         }
         break
       case 'e':
         if (display === '0') {
-          setDisplay('e')
+          newDisplay = 'e'
         } else {
-          setDisplay(display + 'e')
+          newDisplay = display + 'e'
         }
         break
       case 'deg':
       case 'rad':
         // Mode degrés/radians - à implémenter
         console.log('Mode:', value)
-        break
+        return
       case '%':
-        setDisplay(display + '%')
+        newDisplay = display + '%'
         break
       case 'ans':
         if (result) {
           if (display === '0') {
-            setDisplay(result)
+            newDisplay = result
           } else {
-            setDisplay(display + result)
+            newDisplay = display + result
           }
         }
         break
       default:
         if (display === '0' && !isNaN(Number(value))) {
-          setDisplay(value)
+          newDisplay = value
         } else {
-          setDisplay(display + value)
+          newDisplay = display + value
         }
     }
+    
+    setDisplay(newDisplay)
+    // Calculer automatiquement le résultat après mise à jour de l'affichage
+    setTimeout(() => calculateResult(newDisplay), 0)
   }
 
-  // Fonction temporaire d'évaluation (à remplacer par une vraie logique de calcul)
+  // Fonction d'évaluation des expressions mathématiques
   const evaluateExpression = (expression: string): string => {
-    // Ici on ajoutera la vraie logique de calcul plus tard
-    // Pour l'instant, on retourne juste un placeholder
-    return "Résultat à calculer"
+    try {
+      // Nettoyer l'expression
+      let cleanExpression = expression.trim()
+      
+      // Si l'expression contient une addition
+      if (cleanExpression.includes('+')) {
+        // Diviser par le signe +
+        const parts = cleanExpression.split('+')
+        
+        // Calculer la somme
+        const result = parts.reduce((sum, part) => {
+          const num = parseFloat(part.trim())
+          if (isNaN(num)) {
+            throw new Error('Nombre invalide')
+          }
+          return sum + num
+        }, 0)
+        
+        return result.toString()
+      }
+      // Si l'expression contient une soustraction
+      if (cleanExpression.includes('-')) {
+        // Diviser par le signe -
+        const parts = cleanExpression.split('-')
+        
+        // Calculer la différence
+        const result = parts.reduce((diff, part, index) => {
+          const num = parseFloat(part.trim())
+          if (isNaN(num)) {
+            throw new Error('Nombre invalide')
+          }
+          return index === 0 ? num : diff - num
+        }, 0)
+        
+        return result.toString()
+      }
+
+     if (cleanExpression.includes('×')) {
+        // Remplacer × par *
+        cleanExpression = cleanExpression.replace(/×/g, '*')
+        // Évaluer l'expression
+        const result = eval(cleanExpression)
+        return result.toString()
+      }
+
+      if (cleanExpression.includes('/')) {
+        // Remplacer / par /
+        cleanExpression = cleanExpression.replace(/\//g, '/')
+        // Évaluer l'expression
+        const result = eval(cleanExpression)
+        return result.toString()
+      }
+      
+      // Pour les autres opérations, retourner un placeholder temporaire
+      return "Opération non supportée"
+    } catch (error) {
+      return 'Erreur'
+    }
   }
 
   const handleKeyPress = (event: KeyboardEvent) => {
@@ -162,13 +251,18 @@ export const useCalcul = () => {
   }
 
   const handleDelete = () => {
+    let newDisplay
     if (display.length > 1) {
-      setDisplay(display.slice(0, -1))
+      newDisplay = display.slice(0, -1)
     } else {
-      setDisplay('0')
+      newDisplay = '0'
     }
+    setDisplay(newDisplay)
     setPressedKey('delete')
     setTimeout(() => setPressedKey(null), 150)
+    
+    // Recalculer automatiquement après suppression
+    setTimeout(() => calculateResult(newDisplay), 0)
   }
 
   const clearHistory = () => {

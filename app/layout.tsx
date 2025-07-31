@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/dashboardLayout/Navbar";
 import MainContent from "@/components/dashboardLayout/MainContent";
 import SideBar from "@/components/dashboardLayout/SideBar";
+import SidebarInitializer from "@/components/SidebarInitializer";
+import MobileMenuButton from "@/components/ui/MobileMenuButton";
 import NextTopLoader from "nextjs-toploader";
 
 const poppins = Poppins({
@@ -26,8 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-sans antialiased bg-white`}>
+        <SidebarInitializer />
         <NextTopLoader 
-          color="#1C274D"
+          color="#1c284dff"
           initialPosition={0.08}
           crawlSpeed={200}
           height={3}
@@ -37,14 +40,19 @@ export default function RootLayout({
           speed={200}
           shadow="0 0 10px #1C274D,0 0 5px #1C274D"
         />
-        <div className="flex h-screen p-4 space-x-4">
-          <SideBar />
-          <div className="flex-1 flex flex-col space-y-4">
-            <Navbar />
-            <MainContent>
-              {children}
-            </MainContent>
+        <div className="flex h-screen overflow-hidden">
+          {/* Container responsive pour mobile/desktop */}
+          <div className="flex w-full">
+            <SideBar />
+            <div className="flex-1 flex flex-col min-w-0">
+              <Navbar />
+              <MainContent>
+                {children}
+              </MainContent>
+            </div>
           </div>
+          {/* Bouton menu mobile */}
+          <MobileMenuButton />
         </div>
       </body>
     </html>

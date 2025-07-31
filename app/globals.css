@@ -35,3 +35,64 @@
   background: #a8a8a8;
 }
 
+/* Responsive improvements */
+@layer utilities {
+  /* Ensure proper touch targets on mobile */
+  @media (max-width: 768px) {
+    button {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Better text scaling on mobile */
+    .text-responsive {
+      font-size: clamp(0.875rem, 2.5vw, 1rem);
+    }
+    
+    /* Optimize spacing for mobile */
+    .space-mobile {
+      padding: 0.75rem;
+    }
+  }
+  
+  /* Tablet optimizations */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .calculator-grid {
+      gap: 0.5rem;
+    }
+  }
+  
+  /* Prevent zoom on iOS inputs */
+  @media (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/* Animation for sidebar transitions */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.sidebar-animate-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.sidebar-animate-out {
+  animation: slideOut 0.3s ease-out;
+}
