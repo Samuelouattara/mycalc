@@ -16,6 +16,31 @@
   font-family: var(--font-poppins), system-ui, sans-serif;
 }
 
+/* Mobile optimization for body */
+.mobile-optimized {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .mobile-optimized {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  
+  /* Ensure scrollable content on mobile */
+  body {
+    position: relative;
+    overflow: visible;
+  }
+  
+  /* Remove height constraints on mobile */
+  .mobile-full-scroll {
+    height: auto !important;
+    min-height: 100vh;
+  }
+}
+
 /* Custom scrollbar for modern look */
 ::-webkit-scrollbar {
   width: 6px;
@@ -53,6 +78,24 @@
     .space-mobile {
       padding: 0.75rem;
     }
+    
+    /* Fix mobile scrolling issues */
+    body {
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure mobile content is scrollable */
+    .mobile-scroll {
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    
+    /* Fix viewport height on mobile */
+    .mobile-full-height {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
   }
   
   /* Tablet optimizations */
@@ -66,6 +109,17 @@
   @media (max-width: 768px) {
     input, select, textarea {
       font-size: 16px !important;
+    }
+  }
+  
+  /* Safe area insets for mobile devices */
+  @supports (padding: max(0px)) {
+    @media (max-width: 768px) {
+      .mobile-safe-area {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+      }
     }
   }
 }

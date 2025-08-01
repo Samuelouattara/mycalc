@@ -29,12 +29,21 @@ export default function Page() {
     ]
 
   return (
-    <div className="flex flex-col h-full">
-      <ContentTitle title="Calculatrice" description="Effectuez vos calculs avec facilité" icon={<CalculatorIcon className="w-6 h-6" />} actions={actions} />
+    <div className={`
+      flex flex-col w-full
+      ${isMobile ? 'min-h-screen pb-60' : isTablet ? 'min-h-screen pb-120' : 'h-full'}
+    `}>
+      <div className={`
+        ${isMobile ? 'px-4 pt-4 pb-2' : 'p-0'}
+      `}>
+        <ContentTitle title="Calculatrice" description="Effectuez vos calculs avec facilité" icon={<CalculatorIcon className="w-6 h-6" />} actions={actions} />
+      </div>
 
       <div className={`
-        flex-1 flex gap-6 p-6 overflow-auto
-        ${isMobile ? 'flex-col gap-4 p-4' : isTablet ? 'flex-col gap-5 p-5' : 'flex-row'}
+        flex-1 w-full
+        ${isMobile ? 'px-4 pb-20' : 'p-6'}
+        ${isMobile ? 'flex-col gap-4' : isTablet ? 'flex-col gap-5' : 'flex-row gap-6'}
+        flex
       `}>
         {/* Clavier de la calculatrice */}
         <div className={`
@@ -42,7 +51,7 @@ export default function Page() {
         `}>
           <div className={`
             grid gap-2
-            ${isMobile ? 'grid-cols-6 gap-1.5' : isTablet ? 'grid-cols-6 gap-2' : 'grid-cols-6 gap-2'}
+            ${isMobile ? 'grid-cols-6 gap-1,5' : isTablet ? 'grid-cols-6 gap-2' : 'grid-cols-6 gap-2'}
           `}>
             {buttons.flat().map((button, index) => {
               // Remplacer le dernier × par un bouton de suppression stylé

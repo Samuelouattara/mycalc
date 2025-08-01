@@ -3,6 +3,8 @@ import AdminIcon from "../ui/icones/AdminIcon";
 import DateIcon from "../ui/icones/DateIcon";
 import SimpleUserIcon from "../ui/icones/SimpleUser";
 import SortingIcon from "../ui/icones/SortingIcon";
+import { useResponsive } from "@/hooks/useResponsive";
+
 
 interface KpiItem {
     id: number; 
@@ -46,6 +48,7 @@ interface KpiUsersProps {
 
 export default function KpiUsers({ onKpiChange }: KpiUsersProps) {
     const [selectedKpi, setSelectedKpi] = useState<number | null>(null);
+    const { isMobile, isTablet } = useResponsive();
 
     const handleKpiClick = (id: number) => {
         const newSelectedKpi = selectedKpi === id ? null : id;
@@ -56,7 +59,8 @@ export default function KpiUsers({ onKpiChange }: KpiUsersProps) {
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 border-b border-gray-200 pb-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 border-b border-gray-200 pb-6
+        ${isMobile ? 'grid-cols-1' : 'grid-cols-2 lg:grid-cols-4 '}`}>
             {KpiItems.map(item => (
                 <div 
                     key={item.id} 

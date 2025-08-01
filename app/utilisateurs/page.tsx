@@ -8,9 +8,11 @@ import { Content } from 'next/font/google'
 import React, { useState, useCallback } from 'react'
 import TableParams from '@/components/utilisateurs/TableParams'
 import KpiUsers from '@/components/utilisateurs/KpiUsers'
+import { useResponsive } from '@/hooks/useResponsive'
 
 export default function Page() {
   const [selectedKpi, setSelectedKpi] = useState<number | null>(null);
+  const { isMobile } = useResponsive();
 
   const handleKpiChange = useCallback((newSelectedKpi: number | null) => {
     console.log('KPI changed to:', newSelectedKpi);
@@ -35,8 +37,13 @@ export default function Page() {
     }
   ];
   return (
-    <div>
-      <div>
+    <div className={`
+      w-full
+      ${isMobile ? 'min-h-screen px-4 pt-4 pb-24' : ''}
+    `}>
+      <div className={`
+        ${isMobile ? 'mb-4' : ''}
+      `}>
         <ContentTitle title='Utilisateurs' description='Ici retrouver tous les utilisateurs' icon={<UsersIcon />} actions={actions} />
         <KpiUsers onKpiChange={handleKpiChange} />
       </div>

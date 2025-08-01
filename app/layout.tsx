@@ -18,6 +18,12 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "MyCalc - Calculateur intelligent",
   description: "Application de calcul moderne et intuitive",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({
@@ -26,8 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${poppins.variable} font-sans antialiased bg-white`}>
+    <html lang="fr">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+      </head>
+      <body className={`${poppins.variable} font-sans antialiased bg-white mobile-optimized`}>
         <SidebarInitializer />
         <NextTopLoader 
           color="#1c284dff"
@@ -40,15 +49,17 @@ export default function RootLayout({
           speed={200}
           shadow="0 0 10px #1C274D,0 0 5px #1C274D"
         />
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex min-h-screen">
           {/* Container responsive pour mobile/desktop */}
-          <div className="flex w-full">
+          <div className="flex w-full relative">
             <SideBar />
             <div className="flex-1 flex flex-col min-w-0">
               <Navbar />
-              <MainContent>
-                {children}
-              </MainContent>
+              <div className="flex-1">
+                <MainContent>
+                  {children}
+                </MainContent>
+              </div>
             </div>
           </div>
           {/* Bouton menu mobile */}

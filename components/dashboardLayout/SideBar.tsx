@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoIcon from "../ui/icones/logoIcon";
@@ -127,7 +128,7 @@ export default function SideBar() {
             ${isMobile ? (
                 isCollapsed 
                     ? 'fixed left-0 top-0 bottom-0 z-50 w-16 p-2' 
-                    : 'fixed left-0 top-0 bottom-0 z-50 w-64 p-4'
+                    : 'fixed left-0 top-0 bottom-0 z-50 w-64 p-4 overflow-y-auto'
             ) : isTablet ? (
                 isCollapsed 
                     ? 'w-16 p-2' 

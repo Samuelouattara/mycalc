@@ -89,16 +89,29 @@ export default function ProfilPage() {
   ]
 
   return (
-    <div className="flex flex-col h-full">
-      <ContentTitle 
-        title="Mon Profil" 
-        description="Gérez vos informations personnelles et préférences" 
-        icon={<div className="w-6 h-6 flex items-center justify-center"><PersonIcon /></div>} 
-        actions={actions}
-      />
+    <div className={`
+      flex flex-col w-full
+      ${isMobile ? 'min-h-screen pb-24' : 'h-full'}
+    `}>
+      <div className={`
+        ${isMobile ? 'px-4 pt-4 pb-2' : 'p-0'}
+      `}>
+        <ContentTitle 
+          title="Mon Profil" 
+          description="Gérez vos informations personnelles et préférences" 
+          icon={<div className="w-6 h-6 flex items-center justify-center"><PersonIcon /></div>} 
+          actions={actions}
+        />
+      </div>
 
-      <div className="flex-1 p-6 overflow-auto">
-        <div className={`grid gap-6 ${isMobile || isTablet ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
+      <div className={`
+        flex-1 w-full
+        ${isMobile ? 'px-4 pb-38' : isTablet ? 'px-4 pb-130' : 'p-6'}
+      `}>
+        <div className={`
+          grid gap-6 w-full
+          ${isMobile ? 'grid-cols-1 pb-20' : isTablet ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}
+        `}>
           
           {/* Informations principales */}
           <div className={`${isMobile || isTablet ? '' : 'lg:col-span-2'} space-y-6`}>
