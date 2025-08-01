@@ -11,6 +11,25 @@ import RetractIcon from "../ui/icones/RetractIcon";
 import { useSidebarStore } from "../../store/sidebarStore";
 import { useResponsive } from "../../hooks/useResponsive";
 
+// Composant icône hamburger intégré
+const HamburgerIcon = () => (
+    <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M3 12H21M3 6H21M3 18H21"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);
+
 export default function Navbar() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { toggleSidebar, sidebarState, setSidebarState } = useSidebarStore();
@@ -22,23 +41,44 @@ export default function Navbar() {
     };
 
     const handleRetractClick = () => {
-        toggleSidebar();
+        if (isMobile) {
+            // Sur mobile, ouvrir directement en expanded ou fermer
+            const newState = sidebarState === 'expanded' ? 'collapsed' : 'expanded';
+            setSidebarState(newState);
+        } else {
+            // Sur desktop/tablet, utiliser le toggle normal
+            toggleSidebar();
+        }
     };
 
     return (
         <div className={`
-            w-full flex flex-row items-center justify-between bg-white shadow-sm border-b border-gray-100
+            w-full flex flex-row items-center justify-between bg-white shadow-sm border-b border-gray-100 relative z-[55]
             ${isMobile ? 'px-4 py-3' : isTablet ? 'px-6 py-3' : 'p-4'}
         `}>
+            {/* Section gauche */}
             <div className="flex items-center space-x-2 md:space-x-4">
-                <button 
-                    onClick={handleRetractClick}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                    <div className={`transform transition-transform duration-300 ${isCollapsed ? 'rotate-180' : 'rotate-0'}`}>
-                        <RetractIcon />
-                    </div>
-                </button>
+                {/* Bouton hamburger sur mobile à gauche */}
+                {isMobile ? (
+                    <button 
+                        onClick={handleRetractClick}
+                        className="p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200 shadow-sm z-[60] relative"
+                        aria-label="Menu"
+                    >
+                        <HamburgerIcon />
+                    </button>
+                ) : (
+                    /* Bouton de rétraction seulement sur desktop/tablet */
+                    <button 
+                        onClick={handleRetractClick}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        aria-label="Toggle sidebar"
+                    >
+                        <div className={`transform transition-transform duration-300 ${isCollapsed ? 'rotate-180' : 'rotate-0'}`}>
+                            <RetractIcon />
+                        </div>
+                    </button>
+                )}
                 
                 {/* Barre de recherche avec Ctrl+F - cachée sur mobile */}
                 {!isMobile && (
@@ -61,7 +101,9 @@ export default function Navbar() {
                         </div>
                     </div>
                 )}
-            </div>            {/* Section droite avec icônes et utilisateur */}
+            </div>
+
+            {/* Section droite avec icônes et utilisateur */}
             <div className={`flex items-center ${isMobile ? 'space-x-2' : 'space-x-4'}`}>
                 {/* Icônes cachées sur mobile très petit */}
                 {!isMobile && (
@@ -104,8 +146,8 @@ export default function Navbar() {
                             ${isMobile ? 'w-40' : 'w-48'}
                         `}>
                             <div className="py-1">
-                                <a href="/utilisateurs" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Profile
+                                <a href="/Profil" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Profil
                                 </a>
                                 <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     {isMobile ? 'Paramètres' : 'Paramètres du Compte'}

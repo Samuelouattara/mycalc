@@ -5,6 +5,8 @@ import {
   flexRender,
   createColumnHelper
 } from '@tanstack/react-table';
+import { useResponsive } from '../../hooks/useResponsive';
+import './table-styles.css';
 
 // Définir le type pour les données utilisateur
 interface UserData {
@@ -22,7 +24,14 @@ const defaultData: UserData[] = [
   { firstName: 'Bob', email : 'bob@gmail.com', TypeFavorisOperation : 'Soustraction', DateArrivee: '2023-02-01', Profil : 'User', DernierCalcul: '2*4 = 8' },
   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'User', DernierCalcul: '2*4 = 8' },
    { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
+   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
+   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
+   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
+   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
+
+   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
 ];
+
 
 // Définir les colonnes
 const columnHelper = createColumnHelper<UserData>();
@@ -84,6 +93,8 @@ interface MyTableProps {
 }
 
 function MyTable({ showAdminOnly = false, showUserOnly = false }: MyTableProps) {
+  const { isMobile } = useResponsive();
+  
   const filteredData = useMemo(() => {
     console.log('Recalculating filteredData - showAdminOnly:', showAdminOnly, 'showUserOnly:', showUserOnly);
     return showAdminOnly
@@ -102,31 +113,62 @@ function MyTable({ showAdminOnly = false, showUserOnly = false }: MyTableProps) 
   });
 
   return (
-    <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
-      <table className="min-w-full bg-white">
-        <thead className="bg-[#1C274D]">
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id} className="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider border-b border-gray-300">
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          {table.getRowModel().rows.map((row, index) => (
-            <tr key={row.id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 transition-colors duration-150`}>
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className="px-6 py-4 text-sm text-gray-900 border-b border-gray-200">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="table-container relative">
+      {/* Indicateur de scroll sur mobile */}
+      {isMobile && (
+        <div className="scroll-indicator mb-3 text-xs text-gray-600 text-center bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200">
+          <div className="flex items-center justify-center gap-2">
+            <span>📱</span>
+            <span>Faites défiler horizontalement pour voir toutes les colonnes</span>
+            <span>👉</span>
+          </div>
+        </div>
+      )}
+      
+      <div className={`
+        shadow-lg rounded-lg border border-gray-200 table-container
+        ${isMobile ? 'overflow-x-auto' : 'overflow-x-auto'}
+      `}>
+        <table className={`bg-white ${isMobile ? 'w-max min-w-full' : 'min-w-full'}`}>
+          <thead className={`bg-[#1C274D] ${isMobile ? 'table-header-mobile' : ''}`}>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id} className={`
+                    text-left text-sm font-semibold text-white uppercase tracking-wider border-b border-gray-300
+                    ${isMobile ? 'px-4 py-3 whitespace-nowrap min-w-[140px]' : 'px-6 py-4'}
+                  `}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {table.getRowModel().rows.map((row, index) => (
+              <tr key={row.id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 transition-colors duration-150`}>
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id} className={`
+                    text-sm text-gray-900 border-b border-gray-200
+                    ${isMobile ? 'px-4 py-3 whitespace-nowrap min-w-[140px] table-cell-mobile' : 'px-6 py-4'}
+                  `}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
+      {/* Indicateur de navigation sur mobile */}
+      {isMobile && (
+        <div className="mt-3 flex items-center justify-center gap-2 text-xs text-gray-500">
+          <div className="w-8 h-1 bg-blue-300 rounded-full"></div>
+          <span>Défilez pour plus de données</span>
+          <div className="w-8 h-1 bg-blue-300 rounded-full"></div>
+        </div>
+      )}
     </div>
   );
 }

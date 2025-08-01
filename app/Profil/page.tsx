@@ -117,8 +117,8 @@ export default function ProfilPage() {
           <div className={`${isMobile || isTablet ? '' : 'lg:col-span-2'} space-y-6`}>
             
             {/* Carte d'identité */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-start gap-6 mb-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-blue-100 p-6 hover:bg-[#1C274D] text-white transition-colors duration-200">
+              <div className="flex items-start gap-6 mb-6 hover:text-white">
                 <div className="relative">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
                     {userProfile.name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -196,7 +196,7 @@ export default function ProfilPage() {
             </div>
 
             {/* Préférences */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:bg-[#1C274D] text-white transition-colors duration-200">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-5 h-5 flex items-center justify-center">
                   <SettingsIcon />
@@ -224,7 +224,7 @@ export default function ProfilPage() {
                   </label>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between border-t border-blue-100 pt-4">
                   <div>
                     <p className="text-sm font-medium text-gray-900">Langue</p>
                     <p className="text-sm text-gray-500">Langue de l'interface</p>
@@ -246,12 +246,12 @@ export default function ProfilPage() {
           </div>
 
           {/* Statistiques et informations additionnelles */}
-          <div className="space-y-6">
-            
+          <div className="space-y-6 border-t border-blue-100 pt-6 ">
+
             {/* Statistiques */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistiques</h3>
-              
+            <div className="bg-white rounded-2xl shadow-sm border border-blue-100 p-6 hover:bg-[#1C274D] text-white transition-colors duration-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 hover:text-white">Statistiques</h3>
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Calculs effectués</span>
@@ -271,7 +271,7 @@ export default function ProfilPage() {
             </div>
 
             {/* Actions rapides */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover: border-[#1C274D]">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
               
               <div className="space-y-3">

@@ -31,7 +31,7 @@ export default function Page() {
   return (
     <div className={`
       flex flex-col w-full
-      ${isMobile ? 'min-h-screen pb-60' : isTablet ? 'min-h-screen pb-120' : 'h-full'}
+      ${isMobile ? 'min-h-screen pb-90' : isTablet ? 'min-h-screen pb-120' : 'h-full'}
     `}>
       <div className={`
         ${isMobile ? 'px-4 pt-4 pb-2' : 'p-0'}

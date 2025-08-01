@@ -5,7 +5,6 @@ import Navbar from "@/components/dashboardLayout/Navbar";
 import MainContent from "@/components/dashboardLayout/MainContent";
 import SideBar from "@/components/dashboardLayout/SideBar";
 import SidebarInitializer from "@/components/SidebarInitializer";
-import MobileMenuButton from "@/components/ui/MobileMenuButton";
 import NextTopLoader from "nextjs-toploader";
 
 const poppins = Poppins({
@@ -62,8 +61,6 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-          {/* Bouton menu mobile */}
-          <MobileMenuButton />
         </div>
       </body>
     </html>

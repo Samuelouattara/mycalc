@@ -1,0 +1,54 @@
+/* Styles pour le scroll horizontal du tableau sur mobile */
+.table-container {
+  position: relative;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Animation pour les indicateurs */
+.scroll-indicator {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive table cells */
+@media (max-width: 768px) {
+  .table-cell-mobile {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+  
+  .table-header-mobile {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+}
