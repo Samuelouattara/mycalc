@@ -10,8 +10,9 @@ import UsersIcon from "../ui/icones/usersIcon";
 import IconDashboard from "../ui/icones/IconDashboard";
 import { useSidebarStore } from "../../store/sidebarStore";
 import ProfilIcon from "../ui/icones/ProfilIcon";
+import CloseIcon from "../ui/icones/CloseIcon";
 import { useResponsive } from "../../hooks/useResponsive";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const menuItems = [
     {
@@ -106,101 +107,135 @@ export default function SideBar() {
     const pathname = usePathname();
     const { sidebarState, setSidebarState } = useSidebarStore();
     const { isMobile, isTablet } = useResponsive();
+    const sidebarRef = useRef<HTMLDivElement>(null);
     
-    // Auto-collapse sidebar on mobile and tablet
+    const isCollapsed = sidebarState === 'collapsed';
+    const isHidden = sidebarState === 'hidden';
+    const isExpanded = sidebarState === 'expanded';
+    
+    // Auto-hide sidebar on mobile, auto-collapse on tablet
     useEffect(() => {
-        if (isMobile || isTablet) {
+        if (isMobile) {
+            setSidebarState('hidden');
+        } else if (isTablet) {
             setSidebarState('collapsed');
         }
     }, [isMobile, isTablet, setSidebarState]);
-    
-    const isCollapsed = sidebarState === 'collapsed';
-    const shouldHideOnMobile = isMobile && !isCollapsed;
 
-    // Sur mobile, on cache complètement la sidebar quand elle n'est pas collapsed
-    if (shouldHideOnMobile) {
+    // Gérer les clics à l'extérieur de la sidebar sur mobile
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                isMobile && 
+                isExpanded && 
+                sidebarRef.current && 
+                !sidebarRef.current.contains(event.target as Node)
+            ) {
+                setSidebarState('hidden');
+            }
+        };
+
+        if (isMobile && isExpanded) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [isMobile, isExpanded, setSidebarState]);
+
+    // Sur mobile, on cache complètement la sidebar quand elle est hidden
+    if (isMobile && isHidden) {
         return null;
     }
 
     return (
-        <div className={`
-            flex flex-col bg-[#F7F7F7] shadow-sm transition-all duration-300
-            ${isMobile ? (
-                isCollapsed 
-                    ? 'fixed left-0 top-0 bottom-0 z-50 w-16 p-2' 
-                    : 'fixed left-0 top-0 bottom-0 z-50 w-64 p-4 overflow-y-auto'
-            ) : isTablet ? (
-                isCollapsed 
-                    ? 'w-16 p-2' 
-                    : 'w-48 p-4'
-            ) : (
-                isCollapsed 
-                    ? 'w-20 p-3' 
-                    : 'w-80 p-6'
-            )}
-            ${isMobile || isTablet ? 'rounded-none' : 'rounded-xl m-4'}
-        `}>
-            {/* Overlay pour mobile quand sidebar ouverte */}
-            {isMobile && !isCollapsed && (
-                <div 
-                    className="fixed inset-0 bg-black bg-opacity-50 z-40"
-                    onClick={() => setSidebarState('collapsed')}
-                />
-            )}
-            {/* Logo de mycalc  */}
-            <div className={`flex items-center ${isCollapsed ? 'justify-center mb-6' : 'gap-3 mb-8'}`}>
-                <LogoIcon />
-                {!isCollapsed && (
-                    <p className="text-gray-800 text-xl font-bold">MyCalc</p>
+        <>
+            <div 
+                ref={sidebarRef}
+                className={`
+                    flex flex-col bg-[#F7F7F7] transition-all duration-300
+                    ${isMobile ? (
+                        isExpanded 
+                            ? 'fixed left-0 top-0 bottom-0 z-50 w-64 p-4 overflow-y-auto shadow-2xl' 
+                            : 'fixed left-0 top-0 bottom-0 z-50 w-16 p-2 shadow-sm'
+                    ) : isTablet ? (
+                        isCollapsed 
+                            ? 'w-16 p-2 shadow-sm' 
+                            : 'w-48 p-4 shadow-sm'
+                    ) : (
+                        isCollapsed 
+                            ? 'w-20 p-3 shadow-sm' 
+                            : 'w-80 p-6 shadow-sm'
+                    )}
+                    ${isMobile || isTablet ? 'rounded-none' : 'rounded-xl m-4'}
+                `}>
+                
+                {/* Bouton fermer pour mobile */}
+                {isMobile && isExpanded && (
+                    <button
+                        onClick={() => setSidebarState('hidden')}
+                        className="absolute top-21 right-4 p-2 hover:bg-gray-200 rounded-lg transition-colors z-60"
+                        aria-label="Fermer le menu"
+                    >
+                        <CloseIcon />
+                    </button>
                 )}
-            </div>
 
-            {/* Menu de navigation  */}
-            <div className="flex-1">
-                {!isCollapsed && (
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-4">MENU</p>
-                )}
-                <div className={`space-y-1 ${isCollapsed ? 'mb-6' : 'mb-8'}`}>
-                    {menuItems.map((item) => {
-                        const isActive: boolean = pathname === item.href ||
-                            (item.href === "/" && pathname === "/") ||
-                            (item.href !== "/" && pathname.startsWith(item.href));
-
-                        return (
-                            <LinkSidebar
-                                key={item.id}
-                                href={item.href}
-                                label={item.label}
-                                icon={item.icon}
-                                isActive={isActive}
-                                badge={item.badge}
-                                isCollapsed={isCollapsed}
-                            />
-                        );
-                    })}
+                {/* Logo de mycalc  */}
+                <div className={`flex items-center ${(isMobile && !isExpanded) || (!isMobile && isCollapsed) ? 'justify-center mb-6' : 'gap-3 mb-8'}`}>
+                    <LogoIcon />
+                    {((isMobile && isExpanded) || (!isMobile && !isCollapsed)) && (
+                        <p className="text-gray-800 text-xl font-bold">MyCalc</p>
+                    )}
                 </div>
 
-                {/* General Section */}
-                {!isCollapsed && (
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-4">GENERAL</p>
-                )}
-                <div className="space-y-1">
-                    {generalItems.map((item) => {
-                        const isActive = pathname === item.href || pathname.startsWith(item.href);
+                {/* Menu de navigation  */}
+                <div className="flex-1">
+                    {((isMobile && isExpanded) || (!isMobile && !isCollapsed)) && (
+                        <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-4">MENU</p>
+                    )}
+                    <div className={`space-y-1 ${(isMobile && !isExpanded) || (!isMobile && isCollapsed) ? 'mb-6' : 'mb-8'}`}>
+                        {menuItems.map((item) => {
+                            const isActive: boolean = pathname === item.href ||
+                                (item.href === "/" && pathname === "/") ||
+                                (item.href !== "/" && pathname.startsWith(item.href));
 
-                        return (
-                            <LinkSidebar
-                                key={item.id}
-                                href={item.href}
-                                label={item.label}
-                                icon={item.icon}
-                                isActive={isActive}
-                                isCollapsed={isCollapsed}
-                            />
-                        );
-                    })}
+                            return (
+                                <LinkSidebar
+                                    key={item.id}
+                                    href={item.href}
+                                    label={item.label}
+                                    icon={item.icon}
+                                    isActive={isActive}
+                                    badge={item.badge}
+                                    isCollapsed={(isMobile && !isExpanded) || (!isMobile && isCollapsed)}
+                                />
+                            );
+                        })}
+                    </div>
+
+                    {/* General Section */}
+                    {((isMobile && isExpanded) || (!isMobile && !isCollapsed)) && (
+                        <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-4">GENERAL</p>
+                    )}
+                    <div className="space-y-1">
+                        {generalItems.map((item) => {
+                            const isActive = pathname === item.href || pathname.startsWith(item.href);
+
+                            return (
+                                <LinkSidebar
+                                    key={item.id}
+                                    href={item.href}
+                                    label={item.label}
+                                    icon={item.icon}
+                                    isActive={isActive}
+                                    isCollapsed={(isMobile && !isExpanded) || (!isMobile && isCollapsed)}
+                                />
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

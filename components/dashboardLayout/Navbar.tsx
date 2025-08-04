@@ -42,8 +42,8 @@ export default function Navbar() {
 
     const handleRetractClick = () => {
         if (isMobile) {
-            // Sur mobile, ouvrir directement en expanded ou fermer
-            const newState = sidebarState === 'expanded' ? 'collapsed' : 'expanded';
+            // Sur mobile, basculer entre hidden et expanded
+            const newState = sidebarState === 'expanded' ? 'hidden' : 'expanded';
             setSidebarState(newState);
         } else {
             // Sur desktop/tablet, utiliser le toggle normal
