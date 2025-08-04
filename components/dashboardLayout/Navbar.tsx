@@ -53,8 +53,10 @@ export default function Navbar() {
 
     return (
         <div className={`
-            w-full flex flex-row items-center justify-between bg-white shadow-sm border-b border-gray-100 relative z-[55]
-            ${isMobile ? 'px-4 py-3' : isTablet ? 'px-6 py-3' : 'p-4'}
+            w-full flex flex-row items-center justify-between bg-white shadow-sm border-b border-gray-100
+            ${isMobile ? 'fixed top-0 left-0 right-0 z-40 px-4 py-3' : 'relative z-[55] px-6 py-3'}
+            ${isTablet && !isMobile ? 'px-6 py-3' : ''}
+            ${!isMobile && !isTablet ? 'p-4' : ''}
         `}>
             {/* Section gauche */}
             <div className="flex items-center space-x-2 md:space-x-4">

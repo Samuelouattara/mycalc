@@ -65,12 +65,13 @@ interface LinkSidebarProps {
     isActive?: boolean;
     badge?: string;
     isCollapsed?: boolean;
+    onClick?: () => void;
 }
 
 // lien pour les pages
-const LinkSidebar = ({ href, label, icon, isActive = false, badge, isCollapsed = false }: LinkSidebarProps) => {
+const LinkSidebar = ({ href, label, icon, isActive = false, badge, isCollapsed = false, onClick }: LinkSidebarProps) => {
     return (
-        <Link href={href}>
+        <Link href={href} onClick={onClick}>
             <div className={`relative flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-3 rounded-lg transition-all duration-200 ${isActive
                 ? 'bg-white shadow-sm'
                 : 'hover:bg-gray-50'
@@ -148,6 +149,13 @@ export default function SideBar() {
         return null;
     }
 
+    // Fonction pour fermer la sidebar sur mobile quand on clique sur un lien
+    const handleLinkClick = () => {
+        if (isMobile && isExpanded) {
+            setSidebarState('hidden');
+        }
+    };
+
     return (
         <>
             <div 
@@ -174,7 +182,7 @@ export default function SideBar() {
                 {isMobile && isExpanded && (
                     <button
                         onClick={() => setSidebarState('hidden')}
-                        className="absolute top-21 right-4 p-2 hover:bg-gray-200 rounded-lg transition-colors z-60"
+                        className="absolute top-5 right-4 p-2 hover:bg-gray-200 rounded-lg transition-colors z-60"
                         aria-label="Fermer le menu"
                     >
                         <CloseIcon />
@@ -209,6 +217,7 @@ export default function SideBar() {
                                     isActive={isActive}
                                     badge={item.badge}
                                     isCollapsed={(isMobile && !isExpanded) || (!isMobile && isCollapsed)}
+                                    onClick={handleLinkClick}
                                 />
                             );
                         })}
@@ -230,6 +239,7 @@ export default function SideBar() {
                                     icon={item.icon}
                                     isActive={isActive}
                                     isCollapsed={(isMobile && !isExpanded) || (!isMobile && isCollapsed)}
+                                    onClick={handleLinkClick}
                                 />
                             );
                         })}
