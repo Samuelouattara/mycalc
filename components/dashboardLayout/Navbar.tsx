@@ -5,7 +5,7 @@ import SearchIcon from "../ui/icones/searchIcon";
 import Notification from "../ui/icones/notification";
 import MessageIcon from "../ui/icones/message";
 import CtrlFIcon from "../ui/icones/CtrlFIcon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dropdown from "../ui/icones/dropdown";
 import RetractIcon from "../ui/icones/RetractIcon";
 import { useSidebarStore } from "../../store/sidebarStore";
@@ -31,6 +31,22 @@ const HamburgerIcon = () => (
 );
 
 export default function Navbar() {
+    const handleLogout = () => {
+        if (typeof window !== 'undefined') {
+            window.localStorage.removeItem('userId');
+            window.location.href = '/login';
+        }
+    };
+    const [userName, setUserName] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const nom = window.localStorage.getItem('userNom');
+            const email = window.localStorage.getItem('userEmail');
+            setUserName(nom || 'Utilisateur');
+            setUserEmail(email || '');
+        }
+    }, []);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { toggleSidebar, sidebarState, setSidebarState } = useSidebarStore();
     const { isMobile, isTablet } = useResponsive();
@@ -133,8 +149,8 @@ export default function Navbar() {
                         {/* Infos utilisateur cachées sur mobile */}
                         {!isMobile && (
                             <div className="text-left">
-                                <div className="text-sm font-medium text-gray-900">Samuel Otr</div>
-                                <div className="text-xs text-gray-500">samuelotr@gmail.com</div>
+                                <div className="text-sm font-medium text-gray-900">{userName}</div>
+                                <div className="text-xs text-gray-500">{userEmail}</div>
                             </div>
                         )}
                         <div className={`transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
@@ -148,16 +164,24 @@ export default function Navbar() {
                             ${isMobile ? 'w-40' : 'w-48'}
                         `}>
                             <div className="py-1">
-                                <a href="/Profil" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/Profil" className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100">
                                     Profil
                                 </a>
                                 <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     {isMobile ? 'Paramètres' : 'Paramètres du Compte'}
                                 </a>
-                                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Se déconnecter
+                                <a href="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                                    Se connecter
                                 </a>
-                                
+                                 <a href="/newaccount" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100">
+                                    Créer un compte
+                                </a>
+                                <button
+                                    onClick={handleLogout}
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100"
+                                >
+                                    Déconnexion
+                                </button>
                                 <hr className="my-1" />
                             </div>
                         </div>

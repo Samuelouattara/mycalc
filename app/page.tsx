@@ -5,6 +5,7 @@ import IconDashboard from "@/components/ui/icones/IconDashboard";
 import { useRouter } from "next/navigation";
 import { useResponsive } from "@/hooks/useResponsive";
 
+
 export default function Home() {
   const router = useRouter();
   const { isMobile } = useResponsive();
@@ -38,7 +39,7 @@ export default function Home() {
       w-full
       ${isMobile ? 'min-h-screen px-4 pt-4 pb-24' : 'space-y-6'}
     `}>
-      <ContentTitle title="Dashboard" description="Bienvenue sur MyCalc" icon={<IconDashboard />} actions={actions} />
+  <ContentTitle title="Dashboard" description="Bienvenue sur OuattCALC?" icon={<IconDashboard />} actions={actions} />
     </div>
   );
 }

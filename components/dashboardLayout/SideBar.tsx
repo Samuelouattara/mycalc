@@ -158,6 +158,15 @@ export default function SideBar() {
 
     return (
         <>
+            {/* Overlay avec flou pour mobile quand la sidebar est ouverte */}
+            {isMobile && isExpanded && (
+                <div 
+                    className="fixed inset-0 backdrop-blur-sm z-[100] transition-all duration-300"
+                    onClick={() => setSidebarState('hidden')}
+                    style={{ left: '256px', top: '0', right: '0', bottom: '0' }} // Décalage pour ne pas couvrir la sidebar et s'assurer que tout le reste est couvert
+                />
+            )}
+            
             <div 
                 ref={sidebarRef}
                 className={`
@@ -193,7 +202,7 @@ export default function SideBar() {
                 <div className={`flex items-center ${(isMobile && !isExpanded) || (!isMobile && isCollapsed) ? 'justify-center mb-6' : 'gap-3 mb-8'}`}>
                     <LogoIcon />
                     {((isMobile && isExpanded) || (!isMobile && !isCollapsed)) && (
-                        <p className="text-gray-800 text-xl font-bold">MyCalc</p>
+                        <Link href="./" className="text-gray-800 text-xl font-bold">OuattCALC?</Link>
                     )}
                 </div>
 

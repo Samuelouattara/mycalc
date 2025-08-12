@@ -149,70 +149,29 @@ export const useCalcul = () => {
         }
     }
     
-    setDisplay(newDisplay)
-    // Calculer automatiquement le résultat après mise à jour de l'affichage
-    setTimeout(() => calculateResult(newDisplay), 0)
+  setDisplay(newDisplay)
+  console.log('Display après clic:', newDisplay)
+  // Calculer automatiquement le résultat après mise à jour de l'affichage
+  setTimeout(() => calculateResult(newDisplay), 0)
   }
 
   // Fonction d'évaluation des expressions mathématiques
   const evaluateExpression = (expression: string): string => {
     try {
-      // Nettoyer l'expression
-      let cleanExpression = expression.trim()
-      
-      // Si l'expression contient une addition
-      if (cleanExpression.includes('+')) {
-        // Diviser par le signe +
-        const parts = cleanExpression.split('+')
-        
-        // Calculer la somme
-        const result = parts.reduce((sum, part) => {
-          const num = parseFloat(part.trim())
-          if (isNaN(num)) {
-            throw new Error('Nombre invalide')
-          }
-          return sum + num
-        }, 0)
-        
-        return result.toString()
-      }
-      // Si l'expression contient une soustraction
-      if (cleanExpression.includes('-')) {
-        // Diviser par le signe -
-        const parts = cleanExpression.split('-')
-        
-        // Calculer la différence
-        const result = parts.reduce((diff, part, index) => {
-          const num = parseFloat(part.trim())
-          if (isNaN(num)) {
-            throw new Error('Nombre invalide')
-          }
-          return index === 0 ? num : diff - num
-        }, 0)
-        
-        return result.toString()
-      }
-
-     if (cleanExpression.includes('×')) {
-        // Remplacer × par *
-        cleanExpression = cleanExpression.replace(/×/g, '*')
-        // Évaluer l'expression
-        const result = eval(cleanExpression)
-        return result.toString()
-      }
-
-      if (cleanExpression.includes('/')) {
-        // Remplacer / par /
-        cleanExpression = cleanExpression.replace(/\//g, '/')
-        // Évaluer l'expression
-        const result = eval(cleanExpression)
-        return result.toString()
-      }
-      
-      // Pour les autres opérations, retourner un placeholder temporaire
-      return "Opération non supportée"
+      // mathjs attend * pour la multiplication
+      let cleanExpression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+      // mathjs utilise sin, cos, tan en radians par défaut
+      // Pour permettre l'entrée en degrés, on convertit sin(30) => sin(30 deg)
+      cleanExpression = cleanExpression.replace(/(sin|cos|tan)\(([^)]+)\)/g, (match, func, arg) => {
+        // Si l'argument est déjà en radians, laisse tel quel
+        // Sinon, ajoute 'deg' pour mathjs
+        if (/deg|rad/.test(arg)) return `${func}(${arg})`;
+        return `${func}(${arg} deg)`;
+      });
+      const result = require('mathjs').evaluate(cleanExpression);
+      return result.toString();
     } catch (error) {
-      return 'Erreur'
+      return 'Erreur';
     }
   }
 
@@ -326,4 +285,4 @@ export const useCalcul = () => {
     clearHistory,
     getButtonStyle
   }
-} 
+}

@@ -6,6 +6,7 @@ import MainContent from "@/components/dashboardLayout/MainContent";
 import SideBar from "@/components/dashboardLayout/SideBar";
 import SidebarInitializer from "@/components/SidebarInitializer";
 import NextTopLoader from "nextjs-toploader";
+import { usePathname } from "next/navigation";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -15,7 +16,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "MyCalc - Calculateur intelligent",
+  title: "OuattCALC? - Calculateur intelligent",
   description: "Application de calcul moderne et intuitive",
   viewport: {
     width: 'device-width',
@@ -25,11 +26,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Utilisation du hook Next.js pour obtenir le chemin courant
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+
+  // Si on est sur /newaccount, on ne rend que le children (layout minimaliste)
+  if (pathname === "/newaccount") {
+    return (
+      <html lang="fr">
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        </head>
+        <body className={`${poppins.variable} font-sans antialiased bg-white mobile-optimized`}>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
+  // Layout classique pour toutes les autres pages
   return (
     <html lang="fr">
       <head>
