@@ -70,7 +70,7 @@ const NewAccountForm: React.FC = () => {
                 <button
                   type="button"
                   key={idx}
-                  className={`rounded-full border-2 p-1 transition ${form.profileIcon === idx + 1 ? 'border-violet-500 shadow-[0_0_8px_2px_rgba(139,92,246,0.7)]' : 'border-gray-300'}`}
+                  className={`rounded-full border-2 p-1 transition ${form.profileIcon === idx + 1 ? 'border-[#1C274D] shadow-[0_0_8px_2px_rgba(28,39,77,0.7)]' : 'border-gray-300'} hover:border-[#1C274D] hover:shadow-[0_0_8px_2px_rgba(28,39,77,0.7)]`}
                   onClick={() => handleIconSelect(idx + 1)}
                   aria-label={`Choisir l'icône ${idx + 1}`}
                 >
@@ -125,10 +125,14 @@ const NewAccountForm: React.FC = () => {
           </div>
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           <div className="flex gap-2 justify-center mt-4">
-            <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Créer le compte</button>
+            <button type="submit" className="bg-[#1C274D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#162040] transition">Créer le compte</button>
+          </div>
+            <div className="mt-1 text-center text-sm text-gray-500">
+            Vous avez déjà un compte ? <a href="/login" className="font-semibold hover:underline" style={{ color: '#1C274D' }}>Se connecter</a>
           </div>
         </form>
       </div>
+
     </div>
   );
 };

@@ -39,8 +39,7 @@ const LoginForm: React.FC = () => {
   return (
   <div className="flex flex-row items-center justify-between w-full h-full">
       <div className="flex flex-col items-center flex-1">
-           <ContentTitle title="Connexion" description="Connectez-vous à votre compte" />
-           <div className="bg-white rounded-2xl shadow-[0_0_16px_4px_rgba(139,92,246,0.8)] border-2 border-violet-500 p-6 w-full max-w-md mx-4 mt-8 text-white transition-colors duration-200">
+        <div className="bg-white rounded-2xl shadow-[0_0_16px_4px_rgba(28,39,77,0.8)] border-2 border-[#1C274D] p-6 w-full max-w-md mx-4 mt-8 text-white transition-colors duration-200">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -66,11 +65,11 @@ const LoginForm: React.FC = () => {
             </div>
             {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             <div className="flex gap-2 justify-center mt-4">
-              <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Se connecter</button>
+              <button type="submit" className="bg-[#1C274D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#162040] transition">Se connecter</button>
             </div>
           </form>
           <div className="mt-4 text-center text-sm text-gray-500">
-            Vous n'avez pas de compte ? <a href="/register" className="text-purple-600 font-semibold hover:underline">Créer un compte</a>
+            Vous n'avez pas de compte ? <a href="/register" className="font-semibold hover:underline" style={{ color: '#1C274D' }}>Créer un compte</a>
           </div>
         </div>
       </div>
