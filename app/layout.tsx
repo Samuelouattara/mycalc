@@ -6,7 +6,7 @@ import MainContent from "@/components/dashboardLayout/MainContent";
 import SideBar from "@/components/dashboardLayout/SideBar";
 import SidebarInitializer from "@/components/SidebarInitializer";
 import NextTopLoader from "nextjs-toploader";
-import { usePathname } from "next/navigation";
+import AuthLayoutWrapper from "@/components/AuthLayoutWrapper";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -27,31 +27,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Utilisation du hook Next.js pour obtenir le chemin courant
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
-
-  // Si on est sur /newaccount, on ne rend que le children (layout minimaliste)
-  if (pathname === "/newaccount") {
-    return (
-      <html lang="fr">
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        </head>
-        <body className={`${poppins.variable} font-sans antialiased bg-white mobile-optimized`}>
-          {children}
-        </body>
-      </html>
-    );
-  }
-
-  // Layout classique pour toutes les autres pages
   return (
     <html lang="fr">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body className={`${poppins.variable} font-sans antialiased bg-white mobile-optimized`}>
-        <SidebarInitializer />
         <NextTopLoader 
           color="#1c284dff"
           initialPosition={0.08}
@@ -63,20 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           speed={200}
           shadow="0 0 10px #1C274D,0 0 5px #1C274D"
         />
-        <div className="flex min-h-screen">
-          {/* Container responsive pour mobile/desktop */}
-          <div className="flex w-full relative">
-            <SideBar />
-            <div className="flex-1 flex flex-col min-w-0">
-              <Navbar />
-              <div className="flex-1">
-                <MainContent>
-                  {children}
-                </MainContent>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AuthLayoutWrapper>
+          {children}
+        </AuthLayoutWrapper>
       </body>
     </html>
   );

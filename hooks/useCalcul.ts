@@ -1,44 +1,10 @@
-import { useState, useEffect } from 'react'
-
-interface CalculHistory {
-  id: number
-  expression: string
-  result: string
-  timestamp: Date
-}
+import { useEffect, useState } from 'react'
+import { useCalculStore } from '@/store/calculStore'
+import { computeChain } from '@/lib/calculs'
 
 export const useCalcul = () => {
-  const [display, setDisplay] = useState('0')
-  const [result, setResult] = useState('')
+  const { display, apiResult, history, setDisplay, setApiResult, addHistory, clearHistory } = useCalculStore()
   const [pressedKey, setPressedKey] = useState<string | null>(null)
-  const [history, setHistory] = useState<CalculHistory[]>([])
-
-  // Fonction pour calculer automatiquement le résultat
-  const calculateResult = (expression: string) => {
-    if (expression === '0' || expression === '' || expression === 'Erreur') {
-      setResult('')
-      return
-    }
-
-    // Vérifier si l'expression contient une opération et se termine par un nombre
-    const hasOperation = expression.includes('+') || expression.includes('-') || expression.includes('×') || expression.includes('/')
-    const endsWithNumber = /\d$/.test(expression)
-    
-    if (hasOperation && endsWithNumber) {
-      try {
-        const calculatedResult = evaluateExpression(expression)
-        if (calculatedResult !== 'Erreur' && calculatedResult !== 'Opération non supportée') {
-          setResult(calculatedResult)
-        } else {
-          setResult('')
-        }
-      } catch (error) {
-        setResult('')
-      }
-    } else {
-      setResult('')
-    }
-  }
 
   const buttons = [
     ['C', 'CE', '(', ')', '√', 'x²'],
@@ -50,13 +16,7 @@ export const useCalcul = () => {
   ]
 
   const addToHistory = (expression: string, calculatedResult: string) => {
-    const newEntry: CalculHistory = {
-      id: Date.now(),
-      expression,
-      result: calculatedResult,
-      timestamp: new Date()
-    }
-    setHistory(prev => [newEntry, ...prev.slice(0, 9)]) // Garder les 10 derniers calculs
+    addHistory({ expression, result: calculatedResult })
   }
 
   const handleButtonClick = (value: string) => {
@@ -69,21 +29,15 @@ export const useCalcul = () => {
       case 'C':
         newDisplay = '0'
         setDisplay(newDisplay)
-        setResult('')
+        setApiResult('')
         return
       case 'CE':
         newDisplay = '0'
         setDisplay(newDisplay)
-        setResult('')
+        setApiResult('')
         return
       case '=':
-        // Garder la fonctionnalité du bouton = pour ajouter à l'historique
-        if (result && result !== '') {
-          addToHistory(display, result)
-          setDisplay(result)
-          setResult('')
-          console.log('Ajouté à l\'historique:', display, '=', result)
-        }
+        handleCompute()
         return
       case 'sin':
       case 'cos':
@@ -133,11 +87,11 @@ export const useCalcul = () => {
         newDisplay = display + '%'
         break
       case 'ans':
-        if (result) {
+        if (apiResult) {
           if (display === '0') {
-            newDisplay = result
+            newDisplay = apiResult
           } else {
-            newDisplay = display + result
+            newDisplay = display + apiResult
           }
         }
         break
@@ -150,28 +104,25 @@ export const useCalcul = () => {
     }
     
   setDisplay(newDisplay)
-  console.log('Display après clic:', newDisplay)
-  // Calculer automatiquement le résultat après mise à jour de l'affichage
-  setTimeout(() => calculateResult(newDisplay), 0)
   }
 
-  // Fonction d'évaluation des expressions mathématiques
-  const evaluateExpression = (expression: string): string => {
+  // Calcul via backend
+  const handleCompute = async () => {
     try {
-      // mathjs attend * pour la multiplication
-      let cleanExpression = expression.replace(/×/g, '*').replace(/÷/g, '/');
-      // mathjs utilise sin, cos, tan en radians par défaut
-      // Pour permettre l'entrée en degrés, on convertit sin(30) => sin(30 deg)
-      cleanExpression = cleanExpression.replace(/(sin|cos|tan)\(([^)]+)\)/g, (match, func, arg) => {
-        // Si l'argument est déjà en radians, laisse tel quel
-        // Sinon, ajoute 'deg' pour mathjs
-        if (/deg|rad/.test(arg)) return `${func}(${arg})`;
-        return `${func}(${arg} deg)`;
-      });
-      const result = require('mathjs').evaluate(cleanExpression);
-      return result.toString();
-    } catch (error) {
-      return 'Erreur';
+      const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+      const userId = userIdStr ? Number(userIdStr) : undefined
+      const payload = { expression: display.replace(/×/g, '*'), userId }
+      const data = await computeChain(payload)
+      if (typeof data.result !== 'undefined') {
+        const resultStr = String(data.result)
+        setApiResult(resultStr)
+        addToHistory(display, resultStr)
+        // On ne change plus display pour garder l'expression originale
+      } else {
+        setApiResult('')
+      }
+    } catch (e) {
+      setApiResult('')
     }
   }
 
@@ -219,14 +170,9 @@ export const useCalcul = () => {
     setDisplay(newDisplay)
     setPressedKey('delete')
     setTimeout(() => setPressedKey(null), 150)
-    
-    // Recalculer automatiquement après suppression
-    setTimeout(() => calculateResult(newDisplay), 0)
   }
 
-  const clearHistory = () => {
-    setHistory([])
-  }
+  // clearHistory vient du store
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress)
@@ -276,7 +222,7 @@ export const useCalcul = () => {
 
   return {
     display,
-    result,
+    result: apiResult || '',
     history,
     buttons,
     pressedKey,

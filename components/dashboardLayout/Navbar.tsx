@@ -173,7 +173,7 @@ export default function Navbar() {
                                 <a href="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
                                     Se connecter
                                 </a>
-                                 <a href="/newaccount" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100">
+                                <a href="/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100">
                                     Créer un compte
                                 </a>
                                 <button

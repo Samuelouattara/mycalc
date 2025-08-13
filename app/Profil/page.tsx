@@ -5,6 +5,7 @@ import ContentTitle from '@/components/shared/contentTitle'
 import PersonIcon from '@/components/ui/icones/personIcon'
 import SettingsIcon from '@/components/ui/icones/settingsIcon'
 import { useResponsive } from '@/hooks/useResponsive'
+import { getUserById } from '@/lib/auth'
 
 interface UserProfile {
   preferences: {
@@ -35,27 +36,25 @@ export default function ProfilPage() {
   React.useEffect(() => {
     const userId = window.localStorage.getItem('userId');
     if (!userId) return;
-  fetch(`http://localhost:3007/users/${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        setUserProfile({
-          id: String(data.id),
-          name: data.Nom,
-          email: data.email,
-          role: 'Utilisateur',
-          avatar: '/api/placeholder/100/100',
-          phone: data.phone || '',
-          department: data.department || '',
-          joinDate: data.joinDate || '',
-          lastLogin: data.lastLogin ? String(data.lastLogin) : '',
-          calculationsCount: data.calculationsCount || 0,
-          preferences: {
-            theme: 'light',
-            language: 'fr',
-            notifications: true
-          }
-        });
+    getUserById(Number(userId)).then((data) => {
+      setUserProfile({
+        id: String(data.id),
+        name: data.Nom,
+        email: data.email,
+        role: 'Utilisateur',
+        avatar: '/api/placeholder/100/100',
+        phone: data.phone || '',
+        department: data.department || '',
+        joinDate: data.joinDate || '',
+        lastLogin: data.lastLogin ? String(data.lastLogin) : '',
+        calculationsCount: data.calculationsCount || 0,
+        preferences: {
+          theme: 'light',
+          language: 'fr',
+          notifications: true
+        }
       });
+    });
   }, []);
 
   const [formData, setFormData] = useState({

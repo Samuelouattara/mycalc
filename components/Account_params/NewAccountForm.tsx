@@ -10,6 +10,7 @@ import ProfileIcon8 from '../ui/icones/ProfileIcon8';
 import ProfileIcon9 from '../ui/icones/ProfileIcon9';
 import ProfileIcon10 from '../ui/icones/ProfileIcon2'; // Utilise ProfileIcon2 comme 10ème pour l'exemple
 import ContentTitle from '../shared/contentTitle';
+import { register } from '@/lib/auth';
 
 const NewAccountForm: React.FC = () => {
   const redirectToLogin = () => {
@@ -44,22 +45,12 @@ const NewAccountForm: React.FC = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3002/users/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          Nom: form.Nom,
-          email: form.email,
-          password: form.password,
-          icon: form.profileIcon
-        })
+      const data = await register({
+        Nom: form.Nom,
+        email: form.email,
+        password: form.password,
+        icon: form.profileIcon
       });
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || "Erreur d'inscription");
-        return;
-      }
-      const data = await response.json();
   // Inscription réussie, redirige vers la page de connexion
   console.log('Register success', data);
   redirectToLogin();

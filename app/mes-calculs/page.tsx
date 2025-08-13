@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useResponsive } from '@/hooks/useResponsive';
+import { getUserCalculationHistory } from '@/lib/calculs';
 
 export default function Page() {
   const { isMobile } = useResponsive();
@@ -28,25 +29,20 @@ export default function Page() {
       setLoading(false);
       return;
     }
-    const url = `/calculations/history/${userId}`.startsWith('http') ? `/calculations/history/${userId}` : `http://localhost:3007/calculations/history/${userId}`;
-    const pagedUrl = `${url}?page=${page}`;
-    fetch(pagedUrl)
-      .then(res => res.json())
-      .then(data => {
-        // Nouvelle structure: { total, history, page, pageSize }
+    getUserCalculationHistory(userId, page)
+      .then((data: any) => {
         if (data && typeof data === 'object' && 'history' in data && 'total' in data) {
-          setCalculations(Array.isArray(data.history) ? data.history : []);
-          setTotal(data.total || 0);
-          setPageSize(data.pageSize || 5);
+          setCalculations(Array.isArray((data as any).history) ? (data as any).history : []);
+          setTotal((data as any).total || 0);
+          setPageSize((data as any).pageSize || 5);
         } else {
-          // Ancienne structure fallback
           const resultArray = Array.isArray(data) ? data : [data];
           setCalculations(resultArray);
           setTotal(resultArray.length);
         }
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setCalculations([]);
         setTotal(0);
         setLoading(false);

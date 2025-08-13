@@ -1,38 +1,24 @@
-// Page de connexion centrée avec navbar et sidebar
 'use client';
 import React from 'react';
-import LoginForm from '@/components/Account_params/LoginForm';
-import { useResponsive } from '@/hooks/useResponsive';
+import NewAccountForm from '@/components/Account_params/NewAccountForm';
 
-export default function LoginPage() {
-  const { isMobile } = useResponsive();
+export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white rounded-3xl shadow-xl flex flex-col md:flex-row overflow-hidden w-full max-w-4xl">
-        {/* Colonne gauche : formulaire */}
-        <div className="flex-1 flex flex-col justify-center px-10 py-12">
+    <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl overflow-hidden">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex-1 px-10 py-12">
           <div className="mb-8">
             <span className="text-purple-600 font-bold text-lg">OUATTCALC?</span>
           </div>
-          <h1 className="text-3xl font-bold mb-2 text-gray-900">Bienvenue sur votre calculatrice intelligente</h1>
-          <p className="text-gray-500 mb-8">Connectez-vous pour accéder à vos calculs et fonctionnalités avancées</p>
-          {/* Formulaire stylé */}
-          <LoginForm />
-          <div className="mt-6 flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="form-checkbox h-4 w-4 text-purple-600" defaultChecked />
-              <span className="text-gray-600">Remember me</span>
-            </label>
-            <a href="#" className="text-purple-600 hover:underline">Forgot Password?</a>
-          </div>
+          <h1 className="text-3xl font-bold mb-2 text-gray-900">Créer un compte</h1>
+          <p className="text-gray-500 mb-8">Rejoignez la calculatrice intelligente et accédez à toutes les fonctionnalités</p>
+          <NewAccountForm />
           <div className="mt-8 text-center text-sm text-gray-500">
-            Don't have an account? <a href="/newaccount" className="text-purple-600 font-semibold hover:underline">Sign Up</a>
+            Vous avez déjà un compte ? <a href="/login" className="text-purple-600 font-semibold hover:underline">Se connecter</a>
           </div>
         </div>
-        {/* Colonne droite : illustration */}
-        <div className="hidden md:flex flex-1 items-center justify-center bg-gradient-to-br from-purple-400 to-blue-400 relative">
+        <div className="hidden md:flex flex-1 items-center justify-center bg-gradient-to-br from-purple-400 to-blue-400">
           <div className="w-full h-full flex items-center justify-center">
-            {/* Illustration SVG stylisée */}
             <svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="320" height="320" rx="40" fill="url(#paint0_linear)" />
               <defs>
@@ -41,7 +27,6 @@ export default function LoginPage() {
                   <stop offset="1" stopColor="#60A5FA" />
                 </linearGradient>
               </defs>
-              {/* Ajout illustration style fingerprint, padlock, clouds, checkmark */}
               <circle cx="160" cy="120" r="60" fill="#fff" opacity="0.2" />
               <rect x="90" y="70" width="140" height="200" rx="24" fill="#fff" />
               <circle cx="160" cy="140" r="40" fill="#E0E7FF" />
@@ -61,3 +46,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 import ContentTitle from '../shared/contentTitle';
+import { login } from '@/lib/auth';
 
 const LoginForm: React.FC = () => {
   const [form, setForm] = useState({
@@ -21,21 +21,11 @@ const LoginForm: React.FC = () => {
       return;
     }
     try {
-  const response = await fetch('http://localhost:3007/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Erreur de connexion');
-        return;
-      }
-      const data = await response.json();
+      const data = await login({ email: form.email, password: form.password });
       // Stocke le nom et l'email dans le localStorage pour la navbar
       if (typeof window !== 'undefined') {
         if (data.nom) window.localStorage.setItem('userNom', data.nom);
-        if (data.email) window.localStorage.setItem('userEmail', data.email);
+        if ((data as any).email) window.localStorage.setItem('userEmail', String((data as any).email));
         if (data.userId) window.localStorage.setItem('userId', String(data.userId));
       }
   // Connexion réussie, redirige vers le profil
@@ -79,6 +69,9 @@ const LoginForm: React.FC = () => {
               <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Se connecter</button>
             </div>
           </form>
+          <div className="mt-4 text-center text-sm text-gray-500">
+            Vous n'avez pas de compte ? <a href="/register" className="text-purple-600 font-semibold hover:underline">Créer un compte</a>
+          </div>
         </div>
       </div>
 
