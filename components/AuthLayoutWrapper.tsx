@@ -23,17 +23,22 @@ export default function AuthLayoutWrapper({ children }: AuthLayoutWrapperProps) 
   return (
     <>
       <SidebarInitializer />
-      <div className="flex min-h-screen">
-        {/* Container responsive pour mobile/desktop */}
-        <div className="flex w-full relative">
-          <SideBar />
-          <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex h-screen overflow-hidden p-4">
+        {/* Sidebar fixe */}
+        <SideBar />
+        
+        {/* Container principal avec navbar fixe et contenu défilant */}
+        <div className="flex-1 flex flex-col min-w-0 ml-4">
+          {/* Navbar fixe */}
+          <div className="mb-4">
             <Navbar />
-            <div className="flex-1">
-              <MainContent>
-                {children}
-              </MainContent>
-            </div>
+          </div>
+          
+          {/* MainContent avec défilement */}
+          <div className="flex-1 overflow-hidden">
+            <MainContent>
+              {children}
+            </MainContent>
           </div>
         </div>
       </div>

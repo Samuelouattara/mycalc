@@ -170,7 +170,7 @@ export default function SideBar() {
             <div 
                 ref={sidebarRef}
                 className={`
-                    flex flex-col bg-[#F7F7F7] transition-all duration-300
+                    flex flex-col bg-[#F7F7F7] transition-all duration-300 h-full rounded-xl border border-gray-100
                     ${isMobile ? (
                         isExpanded 
                             ? 'fixed left-0 top-0 bottom-0 z-50 w-64 p-4 overflow-y-auto shadow-2xl' 
@@ -184,7 +184,6 @@ export default function SideBar() {
                             ? 'w-20 p-3 shadow-sm' 
                             : 'w-80 p-6 shadow-sm'
                     )}
-                    ${isMobile || isTablet ? 'rounded-none' : 'rounded-xl m-4'}
                 `}>
                 
                 {/* Bouton fermer pour mobile */}

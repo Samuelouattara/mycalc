@@ -7,13 +7,17 @@ export async function computeChain(payload: ChainCalculationDto): Promise<Calcul
 }
 
 export async function getUserCalculationHistory(
-	userId: number | string,
-	page?: number
+    userId: number | string,
+    page?: number,
+    operator?: string
 ): Promise<CalculationHistoryResponseDto | any[]> {
-	const { data } = await api.get<CalculationHistoryResponseDto | any[]>(`/calculations/history/${userId}`, {
-		params: page ? { page } : undefined
-	});
-	return data;
+    const params: Record<string, any> = {};
+    if (page) params.page = page;
+    if (operator && operator !== 'all') params.operator = operator;
+    const { data } = await api.get<CalculationHistoryResponseDto | any[]>(`/calculations/history/${userId}`, {
+        params: Object.keys(params).length ? params : undefined
+    });
+    return data;
 }
 
 
