@@ -23,6 +23,7 @@ interface UserProfile {
   joinDate: string;
   lastLogin: string;
   calculationsCount: number;
+  createdAt?: string;
   // plus de préférences utilisateur
 }
 
@@ -46,6 +47,7 @@ export default function ProfilPage() {
         phone: data.phone || '',
         department: data.department || '',
         joinDate: data.joinDate || '',
+        createdAt: data.createdAt || '',
         lastLogin: data.lastLogin ? String(data.lastLogin) : '',
         calculationsCount: data.calculationsCount || 0,
         preferences: {
@@ -131,7 +133,7 @@ export default function ProfilPage() {
           {/* Informations principales */}
           <div className={`${isMobile || isTablet ? '' : 'lg:col-span-2'} space-y-6`}>
             {/* Carte d'identité */}
-            <div className="bg-white rounded-2xl shadow-sm border border-blue-100 p-6 hover:bg-[#1C274D] text-white transition-colors duration-200">
+            <div className="bg-white rounded-2xl shadow-sm border  p-6  hover:border-[#1C274D] text-white transition-colors duration-200">
               <div className="flex items-start gap-6 mb-6 hover:text-white">
                 <div className="relative">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
@@ -143,13 +145,9 @@ export default function ProfilPage() {
                   <h2 className="text-2xl font-bold text-gray-900 mb-1">{userProfile.name}</h2>
                   <p className="text-gray-600 mb-2">{userProfile.role}</p>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    Actif
                   </span>
                   {/* Badges et éléments visuels */}
                   <div className="flex gap-2 mt-3 flex-wrap">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-400 to-blue-400 text-white shadow">⭐ Membre Premium</span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow">🎯 Objectif Atteint</span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-yellow-400 to-red-400 text-white shadow">🔥 Calculateur Expert</span>
                   </div>
                 </div>
               </div>
@@ -180,39 +178,11 @@ export default function ProfilPage() {
                     <p className="text-gray-900 py-2 break-words truncate max-w-full" style={{wordBreak: 'break-word', overflowWrap: 'break-word'}}>{userProfile.email}</p>
                   )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-                  {isEditing ? (
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Numéro de téléphone"
-                    />
-                  ) : (
-                    <p className="text-gray-900 py-2">{userProfile.phone || 'Non renseigné'}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={formData.department}
-                      onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Département"
-                    />
-                  ) : (
-                    <p className="text-gray-900 py-2">{userProfile.department || 'Non renseigné'}</p>
-                  )}
-                </div>
               </div>
             </div>
             {/* Section inspirante */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-100 rounded-2xl shadow-sm border border-blue-100 p-6 mt-6 flex flex-col items-center justify-center">
-              <h3 className="text-xl font-bold text-blue-700 mb-2">Inspiration du jour</h3>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-100 rounded-2xl shadow-sm border  p-6 mt-6 hover:border-[#1C274D] flex flex-col items-center justify-center">
+              <h3 className="text-xl font-bold text-blue-700  mb-2">Inspiration du jour</h3>
               <blockquote className="italic text-gray-700 text-center mb-4 max-w-lg">“Les grands calculs commencent par de petites additions.”</blockquote>
               <div className="w-full max-w-xs">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
@@ -226,10 +196,10 @@ export default function ProfilPage() {
             </div>
           </div>
                 {/* Statistiques et informations additionnelles */}
-                <div className="space-y-6 border-t border-blue-100 pt-6 ">
+                <div className="space-y-6  pt-6 ">
                   {/* Statistiques */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-blue-100 p-6 hover:bg-[#1C274D] text-white transition-colors duration-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 hover:text-white">Statistiques</h3>
+                  <div className="bg-white rounded-2xl shadow-sm p-6  text-gray-900 transition-colors duration-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 ">Statistiques</h3>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Calculs effectués</span>
@@ -237,11 +207,7 @@ export default function ProfilPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Membre depuis</span>
-                        <span className="text-sm font-medium text-gray-900">{userProfile.joinDate}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Dernière connexion</span>
-                        <span className="text-sm font-medium text-gray-900">{userProfile.lastLogin}</span>
+                        <span className="text-sm font-medium text-gray-900">{userProfile.createdAt}</span>
                       </div>
                     </div>
                   </div>
@@ -257,17 +223,6 @@ export default function ProfilPage() {
                           <div>
                             <p className="text-sm font-medium text-gray-900 ">Changer le mot de passe</p>
                             <p className="text-xs text-gray-500">Sécurisez votre compte</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button className="w-full text-left px-4 py-3 rounded-lg border-blue-200 hover:bg-green-100 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                            <span className="text-green-600 text-sm">📊</span>
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">Exporter mes données</p>
-                            <p className="text-xs text-gray-500">Télécharger un rapport</p>
                           </div>
                         </div>
                       </button>

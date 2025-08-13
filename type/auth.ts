@@ -13,6 +13,7 @@ export interface UserDto {
 	phone?: string;
 	department?: string;
 	joinDate?: string;
+	createdAt?: string;
 	lastLogin?: string;
 	calculationsCount: number;
 }
