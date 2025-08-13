@@ -1,5 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useMemo } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -7,26 +6,14 @@ import {
   createColumnHelper
 } from '@tanstack/react-table';
 import { useResponsive } from '../../hooks/useResponsive';
+import { UserDto } from '@/type/auth';
 import './table-styles.css';
 
-// Définir le type pour les données utilisateur
-interface UserData {
-  firstName: string;
-  email: string;
-  TypeFavorisOperation: string;
-  DateArrivee: string;
-  Profil: string;
-  DernierCalcul: string;
-}
-
-// Supprime les profils fictifs :
-// const defaultData: UserData[] = [];
-
 // Définir les colonnes
-const columnHelper = createColumnHelper<UserData>();
+const columnHelper = createColumnHelper<UserDto>();
 
 const columns = [
-  columnHelper.accessor('firstName', {
+  columnHelper.accessor('Nom', {
     header: 'Nom & Prénom',
     cell: info => info.getValue(),
   }),
@@ -34,7 +21,7 @@ const columns = [
     header: 'Email',
     cell: info => info.getValue(),
   }),
-  columnHelper.accessor('TypeFavorisOperation', {
+  columnHelper.accessor('opetype', {
     header: "Type d'opération Favori",
     cell: info => {
       const op = info.getValue();
@@ -59,69 +46,90 @@ const columns = [
       );
     }
   }),
-  columnHelper.accessor('DateArrivee', {
-    header: "Date d'arrivée",
-    cell: info => info.getValue()
+  columnHelper.accessor('calculationsCount', {
+    header: 'Nombre de Calculs',
+    cell: info => (
+      <span className="font-semibold text-blue-600">
+        {info.getValue()}
+      </span>
+    )
   }),
-  columnHelper.accessor('DernierCalcul', {
+  columnHelper.accessor('createdAt', {
+    header: "Date d'inscription",
+    cell: info => {
+      const date = new Date(info.getValue());
+      return date.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+  }),
+  columnHelper.accessor('lastcalc', {
     header: 'Dernier Calcul',
-    cell: info => info.getValue()
+    cell: info => {
+      const lastCalc = info.getValue();
+      return lastCalc ? (
+        <span className="text-sm text-gray-600 font-mono">
+          {lastCalc}
+        </span>
+      ) : (
+        <span className="text-sm text-gray-400 italic">
+          Aucun calcul
+        </span>
+      );
+    }
   }),
 ];
 
-interface MyTableProps {
-  showAdminOnly?: boolean;
-  showUserOnly?: boolean;
+interface UserTableProps {
+  users: UserDto[];
+  loading?: boolean;
+  error?: string | null;
+  onRefresh?: () => void;
 }
 
-function MyTable({ showAdminOnly = false, showUserOnly = false }: MyTableProps) {
+export default function UserTable({ users, loading, error, onRefresh }: UserTableProps) {
   const { isMobile } = useResponsive();
-  const [users, setUsers] = useState<UserData[]>([]);
-
-  useEffect(() => {
-    axios.get('http://localhost:3007/users')
-      .then(res => {
-        // Adapter le mapping selon la structure du backend
-        const mapped = res.data.map((user: any) => {
-          let dateStr = user.createdAt || user.date || '';
-          let formattedDate = '';
-          if (dateStr) {
-            const d = new Date(dateStr);
-            if (!isNaN(d.getTime())) {
-              formattedDate = d.toISOString().slice(0, 10);
-            } else {
-              formattedDate = dateStr;
-            }
-          }
-          return {
-            firstName: user.Nom || '',
-            email: user.email || '',
-            TypeFavorisOperation: user.opetype || '',
-            DateArrivee: formattedDate,
-            Profil: user.role || '',
-            DernierCalcul: user.lastcalc || '',
-          };
-        });
-        setUsers(mapped);
-      })
-      .catch(err => {
-        console.error('Erreur lors de la récupération des utilisateurs:', err);
-      });
-  }, []);
-
-  const filteredData = useMemo(() => {
-    return showAdminOnly
-      ? users.filter(user => user.Profil === 'Admin')
-      : showUserOnly
-      ? users.filter(user => user.Profil === 'User')
-      : users;
-  }, [showAdminOnly, showUserOnly, users]);
 
   const table = useReactTable({
-    data: filteredData,
+    data: users,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <p className="text-red-700 mb-4">{error}</p>
+        {onRefresh && (
+          <button 
+            onClick={onRefresh}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Réessayer
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center space-x-4 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="table-container relative">
@@ -180,47 +188,17 @@ function MyTable({ showAdminOnly = false, showUserOnly = false }: MyTableProps) 
           <div className="w-8 h-1 bg-blue-300 rounded-full"></div>
         </div>
       )}
-    </div>
-  );
-}
 
-interface UserTableProps {
-  selectedKpi?: number | null;
-}
-
-export default function UserTable({ selectedKpi }: UserTableProps) {
-  console.log('UserTable render - selectedKpi:', selectedKpi);
-  
-  // Simplification temporaire pour debug
-  const showAdminOnly = selectedKpi === 1;
-  
-  if (selectedKpi === 1) {
-    // Affichage simple quand ADMINS est sélectionné
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Tableau des Utilisateurs (ADMINS seulement)</h1>
-        <div className="bg-blue-100 p-4 rounded">
-       
-          <MyTable showAdminOnly={showAdminOnly} />
+      {/* Message si aucun utilisateur */}
+      {users.length === 0 && !loading && (
+        <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">👥</span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Aucun utilisateur</h3>
+          <p className="text-gray-500">Aucun utilisateur n'a été trouvé.</p>
         </div>
-      </div>
-    );
-  }
-
-  if (selectedKpi === 2) {
-    // Affichage simple quand USERS est sélectionné
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Tableau des Utilisateurs (USERS seulement)</h1>
-        <MyTable showUserOnly={true} />
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Tableau des Utilisateurs</h1>
-      <MyTable showAdminOnly={showAdminOnly} />
+      )}
     </div>
   );
 }
