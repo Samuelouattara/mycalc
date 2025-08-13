@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,20 +19,8 @@ interface UserData {
   DernierCalcul: string;
 }
 
-// Exemple de données
-const defaultData: UserData[] = [
-  { firstName: 'Alice', email : 'christ@gmail.com', TypeFavorisOperation : 'Addition', DateArrivee: '2023-03-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-  { firstName: 'Bob', email : 'bob@gmail.com', TypeFavorisOperation : 'Soustraction', DateArrivee: '2023-02-01', Profil : 'User', DernierCalcul: '2*4 = 8' },
-  { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'User', DernierCalcul: '2*4 = 8' },
-   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-
-   { firstName: 'Charlie', email : 'charlie@gmail.com', TypeFavorisOperation : 'Multiplication', DateArrivee: '2023-01-01', Profil : 'Admin', DernierCalcul: '2*4 = 8' },
-];
-
+// Supprime les profils fictifs :
+// const defaultData: UserData[] = [];
 
 // Définir les colonnes
 const columnHelper = createColumnHelper<UserData>();
@@ -45,46 +34,39 @@ const columns = [
     header: 'Email',
     cell: info => info.getValue(),
   }),
-    columnHelper.accessor('TypeFavorisOperation', {
-    header: 'Type d\'opération Favori',
+  columnHelper.accessor('TypeFavorisOperation', {
+    header: "Type d'opération Favori",
     cell: info => {
-      const operation = info.getValue();
-      const colors: Record<string, string> = {
+      const op = info.getValue();
+      let label = '';
+      let colors: Record<string, string> = {
         'Addition': 'bg-blue-100 text-blue-800',
         'Soustraction': 'bg-orange-100 text-orange-800',
         'Multiplication': 'bg-purple-100 text-purple-800',
         'Division': 'bg-pink-100 text-pink-800'
       };
+      switch (op) {
+        case '+': label = 'Addition'; break;
+        case '-': label = 'Soustraction'; break;
+        case '*': label = 'Multiplication'; break;
+        case '/': label = 'Division'; break;
+        default: label = op || 'Non défini';
+      }
       return (
-        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${colors[operation] || 'bg-gray-100 text-gray-800'}`}>
-          {operation}
+        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${colors[label] || 'bg-gray-100 text-gray-800'}`}>
+          {label}
         </span>
       );
     }
-    }),
-    columnHelper.accessor('DateArrivee', {
-    header: 'Date d\'arrivée',
+  }),
+  columnHelper.accessor('DateArrivee', {
+    header: "Date d'arrivée",
     cell: info => info.getValue()
-    }),
-    columnHelper.accessor('Profil', {
-    header: 'Profil',
-    cell: info => {
-      const profil = info.getValue();
-      return (
-        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-          profil === 'Admin' 
-            ? 'bg-red-100 text-red-800' 
-            : 'bg-green-100 text-green-800'
-        }`}>
-          {profil}
-        </span>
-      );
-    }
-    }),
-    columnHelper.accessor('DernierCalcul', {
+  }),
+  columnHelper.accessor('DernierCalcul', {
     header: 'Dernier Calcul',
     cell: info => info.getValue()
-    }),
+  }),
 ];
 
 interface MyTableProps {
@@ -94,17 +76,46 @@ interface MyTableProps {
 
 function MyTable({ showAdminOnly = false, showUserOnly = false }: MyTableProps) {
   const { isMobile } = useResponsive();
-  
-  const filteredData = useMemo(() => {
-    console.log('Recalculating filteredData - showAdminOnly:', showAdminOnly, 'showUserOnly:', showUserOnly);
-    return showAdminOnly
-      ? defaultData.filter(user => user.Profil === 'Admin')
-      : showUserOnly
-      ? defaultData.filter(user => user.Profil === 'User')
-      : defaultData;
-  }, [showAdminOnly, showUserOnly]);
+  const [users, setUsers] = useState<UserData[]>([]);
 
-  console.log('MyTable render - showAdminOnly:', showAdminOnly, 'showUserOnly:', showUserOnly, 'filteredData length:', filteredData.length);
+  useEffect(() => {
+    axios.get('http://localhost:3007/users')
+      .then(res => {
+        // Adapter le mapping selon la structure du backend
+        const mapped = res.data.map((user: any) => {
+          let dateStr = user.createdAt || user.date || '';
+          let formattedDate = '';
+          if (dateStr) {
+            const d = new Date(dateStr);
+            if (!isNaN(d.getTime())) {
+              formattedDate = d.toISOString().slice(0, 10);
+            } else {
+              formattedDate = dateStr;
+            }
+          }
+          return {
+            firstName: user.Nom || '',
+            email: user.email || '',
+            TypeFavorisOperation: user.opetype || '',
+            DateArrivee: formattedDate,
+            Profil: user.role || '',
+            DernierCalcul: user.lastcalc || '',
+          };
+        });
+        setUsers(mapped);
+      })
+      .catch(err => {
+        console.error('Erreur lors de la récupération des utilisateurs:', err);
+      });
+  }, []);
+
+  const filteredData = useMemo(() => {
+    return showAdminOnly
+      ? users.filter(user => user.Profil === 'Admin')
+      : showUserOnly
+      ? users.filter(user => user.Profil === 'User')
+      : users;
+  }, [showAdminOnly, showUserOnly, users]);
 
   const table = useReactTable({
     data: filteredData,
