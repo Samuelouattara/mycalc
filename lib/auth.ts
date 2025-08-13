@@ -1,5 +1,5 @@
 import api from '@/lib/apiClient';
-import { LoginResponseDto, LoginUserDto, RegisterUserDto, UserDto } from '@/type/auth';
+import { LoginResponseDto, LoginUserDto, RegisterUserDto, UserDto, TopUserDto, CalculTypesStatsDto } from '@/type/auth';
 
 export async function login(payload: LoginUserDto): Promise<LoginResponseDto> {
 	const { data } = await api.post<LoginResponseDto>('/users/login', payload);
@@ -13,6 +13,23 @@ export async function register(payload: RegisterUserDto): Promise<UserDto> {
 
 export async function getUserById(userId: number | string): Promise<UserDto> {
 	const { data } = await api.get<UserDto>(`/users/${userId}`);
+	return data;
+}
+
+// Fonctions pour le dashboard
+export async function getTopUsers(): Promise<TopUserDto[]> {
+	const { data } = await api.get<TopUserDto[]>('/users/dashboard/top');
+	return data;
+}
+
+export async function getCalculTypesStats(): Promise<CalculTypesStatsDto> {
+	const { data } = await api.get<CalculTypesStatsDto>('/users/dashboard/types/calculs');
+	return data;
+}
+
+// Fonction pour récupérer tous les utilisateurs
+export async function getAllUsers(): Promise<UserDto[]> {
+	const { data } = await api.get<UserDto[]>('/users');
 	return data;
 }
 
