@@ -1,708 +1,838 @@
-
-    "swaggerDoc": {
-      "openapi": "3.0.0",
-      "paths": {
-        "/": {
-          "get": {
-            "operationId": "AppController_getHello",
-            "parameters": [],
-            "responses": {
-              "200": {
-                "description": "Message de bienvenue",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "type": "string",
-                      "example": "Hello World!"
-                    }
-                  }
-                }
-              }
-            },
-            "summary": "Endpoint de test",
-            "tags": [
-              "app"
-            ]
-          }
-        },
-        "/users/register": {
-          "post": {
-            "operationId": "UserController_register",
-            "parameters": [],
-            "requestBody": {
-              "required": true,
+  "swaggerDoc": {
+    "openapi": "3.0.0",
+    "paths": {
+      "/": {
+        "get": {
+          "operationId": "AppController_getHello",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Message de bienvenue",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/RegisterUserDto"
+                    "type": "string",
+                    "example": "Hello World!"
                   }
                 }
               }
-            },
-            "responses": {
-              "201": {
-                "description": "Utilisateur créé avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/UserDto"
-                    }
-                  }
-                }
-              },
-              "400": {
-                "description": "Email déjà utilisé"
-              }
-            },
-            "summary": "Inscrire un nouvel utilisateur",
-            "tags": [
-              "users"
-            ]
-          }
-        },
-        "/users/login": {
-          "post": {
-            "operationId": "UserController_login",
-            "parameters": [],
-            "requestBody": {
-              "required": true,
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/LoginUserDto"
-                  }
-                }
-              }
-            },
-            "responses": {
-              "200": {
-                "description": "Connexion réussie",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/LoginResponseDto"
-                    }
-                  }
-                }
-              },
-              "400": {
-                "description": "Email ou mot de passe incorrect"
-              }
-            },
-            "summary": "Connecter un utilisateur",
-            "tags": [
-              "users"
-            ]
-          }
-        },
-        "/users": {
-          "get": {
-            "operationId": "UserController_findAll",
-            "parameters": [],
-            "responses": {
-              "200": {
-                "description": "Liste des utilisateurs récupérée avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/UserDto"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "summary": "Obtenir tous les utilisateurs",
-            "tags": [
-              "users"
-            ]
+            }
           },
-          "delete": {
-            "operationId": "UserController_deleteAll",
-            "parameters": [],
-            "responses": {
-              "200": {
-                "description": "Tous les utilisateurs supprimés avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/DeleteAllResponseDto"
-                    }
+          "summary": "Endpoint de test",
+          "tags": [
+            "app"
+          ]
+        }
+      },
+      "/users/register": {
+        "post": {
+          "operationId": "UserController_register",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterUserDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Utilisateur créé avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserDto"
                   }
                 }
               }
             },
-            "summary": "Supprimer tous les utilisateurs",
-            "tags": [
-              "users"
-            ]
-          }
-        },
-        "/users/{id}": {
-          "get": {
-            "operationId": "UserController_findOne",
-            "parameters": [
-              {
-                "name": "id",
-                "required": true,
-                "in": "path",
-                "description": "ID de l'utilisateur",
+            "400": {
+              "description": "Email déjà utilisé"
+            }
+          },
+          "summary": "Inscrire un nouvel utilisateur",
+          "tags": [
+            "users"
+          ]
+        }
+      },
+      "/users/login": {
+        "post": {
+          "operationId": "UserController_login",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
                 "schema": {
-                  "type": "number"
+                  "$ref": "#/components/schemas/LoginUserDto"
                 }
               }
-            ],
-            "responses": {
-              "200": {
-                "description": "Utilisateur récupéré avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Connexion réussie",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LoginResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Email ou mot de passe incorrect"
+            }
+          },
+          "summary": "Connecter un utilisateur",
+          "tags": [
+            "users"
+          ]
+        }
+      },
+      "/users": {
+        "get": {
+          "operationId": "UserController_findAll",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Liste des utilisateurs récupérée avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
                       "$ref": "#/components/schemas/UserDto"
                     }
                   }
                 }
-              },
-              "404": {
-                "description": "Utilisateur non trouvé"
               }
-            },
-            "summary": "Obtenir un utilisateur par ID",
-            "tags": [
-              "users"
-            ]
-          }
+            }
+          },
+          "summary": "Obtenir tous les utilisateurs",
+          "tags": [
+            "users"
+          ]
         },
-        "/calculations/compute": {
-          "post": {
-            "operationId": "CalculationController_compute",
-            "parameters": [],
-            "requestBody": {
-              "required": true,
+        "delete": {
+          "operationId": "UserController_deleteAll",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Tous les utilisateurs supprimés avec succès",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/ComputeCalculationDto"
+                    "$ref": "#/components/schemas/DeleteAllResponseDto"
                   }
                 }
               }
-            },
-            "responses": {
-              "200": {
-                "description": "Calcul effectué avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/CalculationResponseDto"
-                    }
-                  }
-                }
-              },
-              "400": {
-                "description": "Erreur de calcul ou utilisateur non trouvé"
-              }
-            },
-            "summary": "Effectuer un calcul simple",
-            "tags": [
-              "calculations"
-            ]
-          }
-        },
-        "/calculations/chain": {
-          "post": {
-            "operationId": "CalculationController_computeChain",
-            "parameters": [],
-            "requestBody": {
+            }
+          },
+          "summary": "Supprimer tous les utilisateurs",
+          "tags": [
+            "users"
+          ]
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "operationId": "UserController_findOne",
+          "parameters": [
+            {
+              "name": "id",
               "required": true,
+              "in": "path",
+              "description": "ID de l'utilisateur",
+              "schema": {
+                "type": "number"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Utilisateur récupéré avec succès",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/ChainCalculationDto"
+                    "$ref": "#/components/schemas/UserDto"
                   }
                 }
               }
             },
-            "responses": {
-              "200": {
-                "description": "Calcul en chaîne effectué avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/CalculationResponseDto"
-                    }
-                  }
-                }
-              },
-              "400": {
-                "description": "Erreur de calcul ou utilisateur non trouvé"
-              }
-            },
-            "summary": "Effectuer un calcul en chaîne",
-            "tags": [
-              "calculations"
-            ]
-          }
-        },
-        "/calculations/history/{userId}": {
-          "get": {
-            "operationId": "CalculationController_getUserCalculationHistory",
-            "parameters": [
-              {
-                "name": "userId",
-                "required": true,
-                "in": "path",
-                "description": "ID de l'utilisateur",
-                "schema": {
-                  "type": "number"
-                }
-              },
-              {
-                "name": "page",
-                "required": false,
-                "in": "query",
-                "description": "Numéro de page",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "Historique des calculs récupéré avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/CalculationHistoryResponseDto"
-                    }
-                  }
-                }
-              },
-              "400": {
-                "description": "Utilisateur non trouvé"
-              }
-            },
-            "summary": "Obtenir l'historique paginé des calculs d'un utilisateur",
-            "tags": [
-              "calculations"
-            ]
-          }
-        },
-        "/calculations/{userId}": {
-          "post": {
-            "operationId": "CalculationController_createCalculation",
-            "parameters": [
-              {
-                "name": "userId",
-                "required": true,
-                "in": "path",
-                "description": "ID de l'utilisateur",
-                "schema": {
-                  "type": "number"
-                }
-              }
-            ],
-            "requestBody": {
-              "required": true,
+            "404": {
+              "description": "Utilisateur non trouvé"
+            }
+          },
+          "summary": "Obtenir un utilisateur par ID",
+          "tags": [
+            "users"
+          ]
+        }
+      },
+      "/users/dashboard/top": {
+        "get": {
+          "operationId": "UserController_getTopUsers",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Top 3 utilisateurs par nombre de calculs",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/CreateCalculationDto"
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UserDto"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "summary": "Obtenir les 3 utilisateurs qui font le plus de calculs",
+          "tags": [
+            "users"
+          ]
+        }
+      },
+      "/users/dashboard/types/calculs": {
+        "get": {
+          "operationId": "UserController_getCalculTypesStats",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Stats globales des calculs"
+            }
+          },
+          "summary": "Obtenir le nombre total de calculs et le nombre par type d’opération",
+          "tags": [
+            "users"
+          ]
+        }
+      },
+      "/calculations/compute": {
+        "post": {
+          "operationId": "CalculationController_compute",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComputeCalculationDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Calcul effectué avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculationResponseDto"
                   }
                 }
               }
             },
-            "responses": {
-              "201": {
-                "description": "Calcul créé avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
+            "400": {
+              "description": "Erreur de calcul ou utilisateur non trouvé"
+            }
+          },
+          "summary": "Effectuer un calcul simple",
+          "tags": [
+            "calculations"
+          ]
+        }
+      },
+      "/calculations/chain": {
+        "post": {
+          "operationId": "CalculationController_computeChain",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChainCalculationDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Calcul en chaîne effectué avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculationResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erreur de calcul ou utilisateur non trouvé"
+            }
+          },
+          "summary": "Effectuer un calcul en chaîne",
+          "tags": [
+            "calculations"
+          ]
+        }
+      },
+      "/calculations/history/{userId}": {
+        "get": {
+          "operationId": "CalculationController_getUserCalculationHistory",
+          "parameters": [
+            {
+              "name": "userId",
+              "required": true,
+              "in": "path",
+              "description": "ID de l'utilisateur",
+              "schema": {
+                "type": "number"
+              }
+            },
+            {
+              "name": "page",
+              "required": false,
+              "in": "query",
+              "description": "Numéro de page (défaut: 1)",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "operator",
+              "required": false,
+              "in": "query",
+              "description": "Filtrer par opérateur. Valeurs acceptées: +, -, *, /, sin, cos, tan, chain. Note: Utilisez %2B pour encoder le + dans l'URL",
+              "schema": {
+                "example": "+",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Historique des calculs récupéré avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculationHistoryResponseDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Utilisateur non trouvé"
+            }
+          },
+          "summary": "Obtenir l'historique paginé des calculs d'un utilisateur avec filtrage optionnel par opérateur",
+          "tags": [
+            "calculations"
+          ]
+        }
+      },
+      "/calculations/{userId}": {
+        "post": {
+          "operationId": "CalculationController_createCalculation",
+          "parameters": [
+            {
+              "name": "userId",
+              "required": true,
+              "in": "path",
+              "description": "ID de l'utilisateur",
+              "schema": {
+                "type": "number"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCalculationDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Calcul créé avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculationDto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Utilisateur non trouvé"
+            }
+          },
+          "summary": "Créer un calcul pour un utilisateur",
+          "tags": [
+            "calculations"
+          ]
+        },
+        "get": {
+          "operationId": "CalculationController_getUserCalculations",
+          "parameters": [
+            {
+              "name": "userId",
+              "required": true,
+              "in": "path",
+              "description": "ID de l'utilisateur",
+              "schema": {
+                "type": "number"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Calculs récupérés avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
                       "$ref": "#/components/schemas/CalculationDto"
                     }
                   }
                 }
-              },
-              "400": {
-                "description": "Utilisateur non trouvé"
               }
             },
-            "summary": "Créer un calcul pour un utilisateur",
-            "tags": [
-              "calculations"
-            ]
+            "400": {
+              "description": "Utilisateur non trouvé"
+            }
           },
-          "get": {
-            "operationId": "CalculationController_getUserCalculations",
-            "parameters": [
-              {
-                "name": "userId",
-                "required": true,
-                "in": "path",
-                "description": "ID de l'utilisateur",
-                "schema": {
-                  "type": "number"
-                }
+          "summary": "Obtenir tous les calculs d'un utilisateur",
+          "tags": [
+            "calculations"
+          ]
+        }
+      },
+      "/calculations/{userId}/operators": {
+        "get": {
+          "operationId": "CalculationController_getUserOperators",
+          "parameters": [
+            {
+              "name": "userId",
+              "required": true,
+              "in": "path",
+              "description": "ID de l'utilisateur",
+              "schema": {
+                "type": "number"
               }
-            ],
-            "responses": {
-              "200": {
-                "description": "Calculs récupérés avec succès",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/CalculationDto"
-                      }
-                    }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Opérateurs récupérés avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserOperatorsResponseDto"
                   }
                 }
-              },
-              "400": {
-                "description": "Utilisateur non trouvé"
               }
             },
-            "summary": "Obtenir tous les calculs d'un utilisateur",
-            "tags": [
-              "calculations"
-            ]
-          }
+            "400": {
+              "description": "Utilisateur non trouvé"
+            }
+          },
+          "summary": "Obtenir tous les opérateurs utilisés par un utilisateur avec leur nombre d'occurrences",
+          "tags": [
+            "calculations"
+          ]
         }
+      }
+    },
+    "info": {
+      "title": "MyCalc API",
+      "description": "API de calculatrice avec gestion des utilisateurs et historique des calculs",
+      "version": "1.0",
+      "contact": {}
+    },
+    "tags": [
+      {
+        "name": "calculations",
+        "description": "Endpoints pour les calculs mathématiques"
       },
-      "info": {
-        "title": "MyCalc API",
-        "description": "API de calculatrice avec gestion des utilisateurs et historique des calculs",
-        "version": "1.0",
-        "contact": {}
+      {
+        "name": "users",
+        "description": "Endpoints pour la gestion des utilisateurs"
       },
-      "tags": [
-        {
-          "name": "calculations",
-          "description": "Endpoints pour les calculs mathématiques"
+      {
+        "name": "app",
+        "description": "Endpoints généraux de l'application"
+      }
+    ],
+    "servers": [],
+    "components": {
+      "schemas": {
+        "RegisterUserDto": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "Adresse email de l'utilisateur",
+              "example": "user@example.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "Mot de passe de l'utilisateur",
+              "example": "password123"
+            },
+            "Nom": {
+              "type": "string",
+              "description": "Nom de l'utilisateur",
+              "example": "John Doe"
+            },
+            "icon": {
+              "type": "number",
+              "description": "Icône de l'utilisateur (optionnel)",
+              "example": 1
+            }
+          },
+          "required": [
+            "email",
+            "password",
+            "Nom"
+          ]
         },
-        {
-          "name": "users",
-          "description": "Endpoints pour la gestion des utilisateurs"
+        "UserDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "ID de l'utilisateur",
+              "example": 1
+            },
+            "email": {
+              "type": "string",
+              "description": "Adresse email de l'utilisateur",
+              "example": "user@example.com"
+            },
+            "Nom": {
+              "type": "string",
+              "description": "Nom de l'utilisateur",
+              "example": "John Doe"
+            },
+            "icon": {
+              "type": "number",
+              "description": "Icône de l'utilisateur",
+              "example": 1
+            },
+            "phone": {
+              "type": "string",
+              "description": "Numéro de téléphone",
+              "example": "+33123456789"
+            },
+            "department": {
+              "type": "string",
+              "description": "Département",
+              "example": "IT"
+            },
+            "joinDate": {
+              "type": "string",
+              "description": "Date d'inscription",
+              "example": "2024-01-15"
+            },
+            "lastLogin": {
+              "format": "date-time",
+              "type": "string",
+              "description": "Dernière connexion",
+              "example": "2024-01-15T10:30:00.000Z"
+            },
+            "calculationsCount": {
+              "type": "number",
+              "description": "Nombre de calculs effectués",
+              "example": 25
+            }
+          },
+          "required": [
+            "id",
+            "email",
+            "Nom",
+            "calculationsCount"
+          ]
         },
-        {
-          "name": "app",
-          "description": "Endpoints généraux de l'application"
-        }
-      ],
-      "servers": [],
-      "components": {
-        "schemas": {
-          "RegisterUserDto": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "Adresse email de l'utilisateur",
-                "example": "user@example.com"
-              },
-              "password": {
-                "type": "string",
-                "description": "Mot de passe de l'utilisateur",
-                "example": "password123"
-              },
-              "Nom": {
-                "type": "string",
-                "description": "Nom de l'utilisateur",
-                "example": "John Doe"
-              },
-              "icon": {
-                "type": "number",
-                "description": "Icône de l'utilisateur (optionnel)",
-                "example": 1
-              }
+        "LoginUserDto": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "Adresse email de l'utilisateur",
+              "example": "user@example.com"
             },
-            "required": [
-              "email",
-              "password",
-              "Nom"
-            ]
+            "password": {
+              "type": "string",
+              "description": "Mot de passe de l'utilisateur",
+              "example": "password123"
+            }
           },
-          "UserDto": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number",
-                "description": "ID de l'utilisateur",
-                "example": 1
-              },
-              "email": {
-                "type": "string",
-                "description": "Adresse email de l'utilisateur",
-                "example": "user@example.com"
-              },
-              "Nom": {
-                "type": "string",
-                "description": "Nom de l'utilisateur",
-                "example": "John Doe"
-              },
-              "icon": {
-                "type": "number",
-                "description": "Icône de l'utilisateur",
-                "example": 1
-              },
-              "phone": {
-                "type": "string",
-                "description": "Numéro de téléphone",
-                "example": "+33123456789"
-              },
-              "department": {
-                "type": "string",
-                "description": "Département",
-                "example": "IT"
-              },
-              "joinDate": {
-                "type": "string",
-                "description": "Date d'inscription",
-                "example": "2024-01-15"
-              },
-              "lastLogin": {
-                "format": "date-time",
-                "type": "string",
-                "description": "Dernière connexion",
-                "example": "2024-01-15T10:30:00.000Z"
-              },
-              "calculationsCount": {
-                "type": "number",
-                "description": "Nombre de calculs effectués",
-                "example": 25
-              }
+          "required": [
+            "email",
+            "password"
+          ]
+        },
+        "LoginResponseDto": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Message de confirmation",
+              "example": "Connexion réussie"
             },
-            "required": [
-              "id",
-              "email",
-              "Nom",
-              "calculationsCount"
-            ]
+            "userId": {
+              "type": "number",
+              "description": "ID de l'utilisateur",
+              "example": 1
+            },
+            "nom": {
+              "type": "string",
+              "description": "Nom de l'utilisateur",
+              "example": "John Doe"
+            }
           },
-          "LoginUserDto": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "Adresse email de l'utilisateur",
-                "example": "user@example.com"
-              },
-              "password": {
-                "type": "string",
-                "description": "Mot de passe de l'utilisateur",
-                "example": "password123"
-              }
-            },
-            "required": [
-              "email",
-              "password"
-            ]
+          "required": [
+            "message",
+            "userId",
+            "nom"
+          ]
+        },
+        "DeleteAllResponseDto": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Message de confirmation",
+              "example": "Tous les utilisateurs ont été supprimés."
+            }
           },
-          "LoginResponseDto": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string",
-                "description": "Message de confirmation",
-                "example": "Connexion réussie"
-              },
-              "userId": {
-                "type": "number",
-                "description": "ID de l'utilisateur",
-                "example": 1
-              },
-              "nom": {
-                "type": "string",
-                "description": "Nom de l'utilisateur",
-                "example": "John Doe"
-              }
+          "required": [
+            "message"
+          ]
+        },
+        "ComputeCalculationDto": {
+          "type": "object",
+          "properties": {
+            "expression1": {
+              "type": "number",
+              "description": "Premier nombre de l'opération",
+              "example": 10
             },
-            "required": [
-              "message",
-              "userId",
-              "nom"
-            ]
+            "operator": {
+              "type": "string",
+              "description": "Opérateur mathématique (+, -, *, /, sin, cos, tan)",
+              "example": "+",
+              "enum": [
+                "+",
+                "-",
+                "*",
+                "/",
+                "sin",
+                "cos",
+                "tan"
+              ]
+            },
+            "expression2": {
+              "type": "number",
+              "description": "Deuxième nombre de l'opération (non requis pour les fonctions trigonométriques)",
+              "example": 5
+            },
+            "userId": {
+              "type": "number",
+              "description": "ID de l'utilisateur (optionnel)",
+              "example": 1
+            }
           },
-          "DeleteAllResponseDto": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string",
-                "description": "Message de confirmation",
-                "example": "Tous les utilisateurs ont été supprimés."
-              }
+          "required": [
+            "expression1",
+            "operator"
+          ]
+        },
+        "CalculationResponseDto": {
+          "type": "object",
+          "properties": {
+            "result": {
+              "type": "number",
+              "description": "Résultat du calcul",
+              "example": 15
             },
-            "required": [
-              "message"
-            ]
+            "operator": {
+              "type": "string",
+              "description": "Opérateur utilisé",
+              "example": "+"
+            }
           },
-          "ComputeCalculationDto": {
-            "type": "object",
-            "properties": {
-              "expression1": {
-                "type": "number",
-                "description": "Premier nombre de l'opération",
-                "example": 10
-              },
-              "operator": {
-                "type": "string",
-                "description": "Opérateur mathématique (+, -, *, /, sin, cos, tan)",
-                "example": "+",
-                "enum": [
-                  "+",
-                  "-",
-                  "*",
-                  "/",
-                  "sin",
-                  "cos",
-                  "tan"
-                ]
-              },
-              "expression2": {
-                "type": "number",
-                "description": "Deuxième nombre de l'opération (non requis pour les fonctions trigonométriques)",
-                "example": 5
-              },
-              "userId": {
-                "type": "number",
-                "description": "ID de l'utilisateur (optionnel)",
-                "example": 1
-              }
+          "required": [
+            "result",
+            "operator"
+          ]
+        },
+        "ChainCalculationDto": {
+          "type": "object",
+          "properties": {
+            "expression": {
+              "type": "string",
+              "description": "Expression mathématique complète à évaluer",
+              "example": "2 + 3 * 4"
             },
-            "required": [
-              "expression1",
-              "operator"
-            ]
+            "userId": {
+              "type": "number",
+              "description": "ID de l'utilisateur (optionnel)",
+              "example": 1
+            }
           },
-          "CalculationResponseDto": {
-            "type": "object",
-            "properties": {
-              "result": {
-                "type": "number",
-                "description": "Résultat du calcul",
-                "example": 15
-              },
-              "operator": {
-                "type": "string",
-                "description": "Opérateur utilisé",
-                "example": "+"
-              }
+          "required": [
+            "expression"
+          ]
+        },
+        "CalculationDto": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "ID du calcul",
+              "example": 1
             },
-            "required": [
-              "result",
-              "operator"
-            ]
+            "expression": {
+              "type": "string",
+              "description": "Expression mathématique",
+              "example": "2 + 3"
+            },
+            "operator": {
+              "type": "string",
+              "description": "Opérateur utilisé",
+              "example": "+"
+            },
+            "result": {
+              "type": "string",
+              "description": "Résultat du calcul",
+              "example": "5"
+            },
+            "createdAt": {
+              "format": "date-time",
+              "type": "string",
+              "description": "Date de création",
+              "example": "2024-01-15T10:30:00.000Z"
+            }
           },
-          "ChainCalculationDto": {
-            "type": "object",
-            "properties": {
-              "expression": {
-                "type": "string",
-                "description": "Expression mathématique complète à évaluer",
-                "example": "2 + 3 * 4"
-              },
-              "userId": {
-                "type": "number",
-                "description": "ID de l'utilisateur (optionnel)",
-                "example": 1
-              }
+          "required": [
+            "id",
+            "expression",
+            "operator",
+            "result",
+            "createdAt"
+          ]
+        },
+        "CalculationHistoryResponseDto": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "number",
+              "description": "Nombre total de calculs",
+              "example": 25
             },
-            "required": [
-              "expression"
-            ]
+            "page": {
+              "type": "number",
+              "description": "Page actuelle",
+              "example": 1
+            },
+            "pageSize": {
+              "type": "number",
+              "description": "Taille de la page",
+              "example": 5
+            },
+            "history": {
+              "description": "Historique des calculs",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CalculationDto"
+              }
+            }
           },
-          "CalculationDto": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number",
-                "description": "ID du calcul",
-                "example": 1
-              },
-              "expression": {
-                "type": "string",
-                "description": "Expression mathématique",
-                "example": "2 + 3"
-              },
-              "operator": {
-                "type": "string",
-                "description": "Opérateur utilisé",
-                "example": "+"
-              },
-              "result": {
-                "type": "string",
-                "description": "Résultat du calcul",
-                "example": "5"
-              },
-              "createdAt": {
-                "format": "date-time",
-                "type": "string",
-                "description": "Date de création",
-                "example": "2024-01-15T10:30:00.000Z"
-              }
+          "required": [
+            "total",
+            "page",
+            "pageSize",
+            "history"
+          ]
+        },
+        "CreateCalculationDto": {
+          "type": "object",
+          "properties": {
+            "expression": {
+              "type": "string",
+              "description": "Expression mathématique",
+              "example": "2 + 3"
             },
-            "required": [
-              "id",
-              "expression",
-              "operator",
-              "result",
-              "createdAt"
-            ]
+            "result": {
+              "type": "string",
+              "description": "Résultat du calcul",
+              "example": "5"
+            }
           },
-          "CalculationHistoryResponseDto": {
-            "type": "object",
-            "properties": {
-              "total": {
-                "type": "number",
-                "description": "Nombre total de calculs",
-                "example": 25
-              },
-              "page": {
-                "type": "number",
-                "description": "Page actuelle",
-                "example": 1
-              },
-              "pageSize": {
-                "type": "number",
-                "description": "Taille de la page",
-                "example": 5
-              },
-              "history": {
-                "description": "Historique des calculs",
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CalculationDto"
-                }
-              }
+          "required": [
+            "expression",
+            "result"
+          ]
+        },
+        "OperatorCountDto": {
+          "type": "object",
+          "properties": {
+            "operator": {
+              "type": "string",
+              "description": "Opérateur mathématique",
+              "example": "+"
             },
-            "required": [
-              "total",
-              "page",
-              "pageSize",
-              "history"
-            ]
+            "count": {
+              "type": "number",
+              "description": "Nombre d'occurrences de cet opérateur",
+              "example": 8
+            }
           },
-          "CreateCalculationDto": {
-            "type": "object",
-            "properties": {
-              "expression": {
-                "type": "string",
-                "description": "Expression mathématique",
-                "example": "2 + 3"
-              },
-              "result": {
-                "type": "string",
-                "description": "Résultat du calcul",
-                "example": "5"
-              }
+          "required": [
+            "operator",
+            "count"
+          ]
+        },
+        "UserOperatorsResponseDto": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "number",
+              "description": "ID de l'utilisateur",
+              "example": 1
             },
-            "required": [
-              "expression",
-              "result"
-            ]
-          }
+            "totalCalculations": {
+              "type": "number",
+              "description": "Nombre total de calculs de l'utilisateur",
+              "example": 13
+            },
+            "operators": {
+              "description": "Liste des opérateurs avec leur nombre d'occurrences",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OperatorCountDto"
+              }
+            }
+          },
+          "required": [
+            "userId",
+            "totalCalculations",
+            "operators"
+          ]
         }
       }
     }
+  },
