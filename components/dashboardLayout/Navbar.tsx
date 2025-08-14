@@ -1,11 +1,21 @@
 'use client'
 
 import PersonIcon from "../ui/icones/personIcon";
+import ProfileIcon1 from "../ui/icones/ProfileIcon1";
+import ProfileIcon2 from "../ui/icones/ProfileIcon2";
+import ProfileIcon3 from "../ui/icones/ProfileIcon3";
+import ProfileIcon4 from "../ui/icones/ProfileIcon4";
+import ProfileIcon5 from "../ui/icones/ProfileIcon5";
+import ProfileIcon6 from "../ui/icones/ProfileIcon6";
+import ProfileIcon7 from "../ui/icones/ProfileIcon7";
+import ProfileIcon8 from "../ui/icones/ProfileIcon8";
+import ProfileIcon9 from "../ui/icones/ProfileIcon9";
 import SearchIcon from "../ui/icones/searchIcon";
 import { useState, useEffect, useRef } from "react";
 import Dropdown from "../ui/icones/dropdown";
 import { useSidebarStore } from "../../store/sidebarStore";
 import { useResponsive } from "../../hooks/useResponsive";
+import { getUserById } from "@/lib/auth";
 import SearchModal from "../shared/SearchModal";
 
 // Composant icône hamburger intégré
@@ -59,13 +69,15 @@ export default function Navbar() {
     };
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [userIcon, setUserIcon] = useState<number | null>(null);
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const nom = window.localStorage.getItem('userNom');
-            const email = window.localStorage.getItem('userEmail');
-            setUserName(nom || 'Utilisateur');
-            setUserEmail(email || '');
-        }
+        const userId = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null;
+        if (!userId) return;
+        getUserById(userId).then((data) => {
+            setUserName(data.Nom || 'Utilisateur');
+            setUserEmail(data.email || '');
+            setUserIcon(data.icon ? Number(data.icon) : null);
+        });
     }, []);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { toggleSidebar, sidebarState, setSidebarState } = useSidebarStore();
@@ -110,7 +122,7 @@ export default function Navbar() {
             `}>
                 {/* Section gauche - Bouton sidebar */}
                 <div className="flex items-center">
-                    {isMobile ? (
+                    {isMobile && sidebarState !== 'expanded' ? (
                         <button 
                             onClick={handleRetractClick}
                             className="p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200 shadow-sm z-[60] relative"
@@ -118,7 +130,7 @@ export default function Navbar() {
                         >
                             <HamburgerIcon />
                         </button>
-                    ) : (
+                    ) : !isMobile ? (
                         <button 
                             onClick={handleRetractClick}
                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600"
@@ -126,7 +138,7 @@ export default function Navbar() {
                         >
                             <ArrowIcon isCollapsed={isCollapsed} />
                         </button>
-                    )}
+                    ) : null}
                 </div>
 
                 {/* Section centrale - Barre de recherche */}
@@ -171,7 +183,20 @@ export default function Navbar() {
                             }`}
                         >
                             <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center">
-                                <PersonIcon />
+                                                                {(() => {
+                                                                    switch(userIcon) {
+                                                                        case 1: return <ProfileIcon1 />;
+                                                                        case 2: return <ProfileIcon2 />;
+                                                                        case 3: return <ProfileIcon3 />;
+                                                                        case 4: return <ProfileIcon4 />;
+                                                                        case 5: return <ProfileIcon5 />;
+                                                                        case 6: return <ProfileIcon6 />;
+                                                                        case 7: return <ProfileIcon7 />;
+                                                                        case 8: return <ProfileIcon8 />;
+                                                                        case 9: return <ProfileIcon9 />;
+                                                                        default: return <PersonIcon />;
+                                                                    }
+                                                                })()}
                             </div>
                             {/* Infos utilisateur cachées sur mobile */}
                             {!isMobile && (

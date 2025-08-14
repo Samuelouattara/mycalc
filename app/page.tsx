@@ -47,7 +47,7 @@ export default function Home() {
         <div className="flex gap-3">
           <button
             onClick={makeCalculation}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="bg-[#1C274D] text-white px-4 py-2 rounded-lg transition-colors font-medium"
           >
             🧮 Faire un calcul
           </button>

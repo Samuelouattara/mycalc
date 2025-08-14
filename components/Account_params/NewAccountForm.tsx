@@ -36,8 +36,12 @@ const NewAccountForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-  if (!form.Nom || !form.email || !form.password || !form.confirmPassword) {
+    if (!form.Nom || !form.email || !form.password || !form.confirmPassword) {
       setError('Tous les champs sont obligatoires.');
+      return;
+    }
+    if (form.password.length < 6 || !/\d/.test(form.password)) {
+      setError('Le mot de passe doit contenir au moins 6 caractères et 1 chiffre.');
       return;
     }
     if (form.password !== form.confirmPassword) {
@@ -51,9 +55,15 @@ const NewAccountForm: React.FC = () => {
         password: form.password,
         icon: form.profileIcon
       });
-  // Inscription réussie, redirige vers la page de connexion
-  console.log('Register success', data);
-  redirectToLogin();
+      // Stocker l'icône et le nom dans le localStorage pour affichage immédiat dans la navbar
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('userIcon', String(form.profileIcon));
+        window.localStorage.setItem('userNom', form.Nom);
+        window.localStorage.setItem('userEmail', form.email);
+      }
+      // Inscription réussie, redirige vers la page de connexion
+      console.log('Register success', data);
+      redirectToLogin();
     } catch (err) {
       setError('Erreur réseau');
     }

@@ -20,13 +20,18 @@ const LoginForm: React.FC = () => {
       setError('Tous les champs sont obligatoires.');
       return;
     }
+    if (form.password.length < 6 || !/\d/.test(form.password)) {
+      setError('Le mot de passe doit contenir au moins 6 caractères et 1 chiffre.');
+      return;
+    }
     try {
       const data = await login({ email: form.email, password: form.password });
-      // Stocke le nom et l'email dans le localStorage pour la navbar
+      // Stocke le nom, l'email et l'icône dans le localStorage pour la navbar
       if (typeof window !== 'undefined') {
         if (data.nom) window.localStorage.setItem('userNom', data.nom);
         if ((data as any).email) window.localStorage.setItem('userEmail', String((data as any).email));
         if (data.userId) window.localStorage.setItem('userId', String(data.userId));
+        if (data.icon) window.localStorage.setItem('userIcon', String(data.icon));
       }
   // Connexion réussie, redirige vers le profil
   console.log('Login success', data);

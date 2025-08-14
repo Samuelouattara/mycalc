@@ -3,9 +3,20 @@
 import React, { useState } from 'react'
 import ContentTitle from '@/components/shared/contentTitle'
 import PersonIcon from '@/components/ui/icones/personIcon'
+import ProfileIcon1 from '@/components/ui/icones/ProfileIcon1';
+import ProfileIcon2 from '@/components/ui/icones/ProfileIcon2';
+import ProfileIcon3 from '@/components/ui/icones/ProfileIcon3';
+import ProfileIcon4 from '@/components/ui/icones/ProfileIcon4';
+import ProfileIcon5 from '@/components/ui/icones/ProfileIcon5';
+import ProfileIcon6 from '@/components/ui/icones/ProfileIcon6';
+import ProfileIcon7 from '@/components/ui/icones/ProfileIcon7';
+import ProfileIcon8 from '@/components/ui/icones/ProfileIcon8';
+import ProfileIcon9 from '@/components/ui/icones/ProfileIcon9';
 import SettingsIcon from '@/components/ui/icones/settingsIcon'
 import { useResponsive } from '@/hooks/useResponsive'
 import { getUserById } from '@/lib/auth'
+import { updateUser, deleteUser } from '@/lib/auth'
+import ChangePasswordModal from '@/components/shared/ChangePasswordModal'
 
 interface UserProfile {
   preferences: {
@@ -18,6 +29,7 @@ interface UserProfile {
   email: string;
   role: string;
   avatar: string;
+  icon?: number;
   phone?: string;
   department?: string;
   joinDate: string;
@@ -28,6 +40,24 @@ interface UserProfile {
 }
 
 export default function ProfilPage() {
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  // Changement du mot de passe
+  const handleChangePassword = () => {
+    setIsPasswordModalOpen(true);
+  };
+
+  const handlePasswordSubmit = async (newPassword: string) => {
+    if (!userProfile) return;
+    try {
+      await updateUser(userProfile.id, { password: newPassword });
+      window.alert('Mot de passe mis à jour avec succès !');
+    } catch (err) {
+      window.alert('Erreur lors de la mise à jour du mot de passe.');
+    }
+  };
   // Ajoute les préférences par défaut lors de la récupération des données utilisateur
   const { isMobile, isTablet } = useResponsive()
   const [isEditing, setIsEditing] = useState(false)
@@ -50,6 +80,7 @@ export default function ProfilPage() {
         createdAt: data.createdAt || '',
         lastLogin: data.lastLogin ? String(data.lastLogin) : '',
         calculationsCount: data.calculationsCount || 0,
+        icon: data.icon || 1,
         preferences: {
           theme: 'light',
           language: 'fr',
@@ -78,14 +109,27 @@ export default function ProfilPage() {
 
   const handleSave = () => {
     if (!userProfile) return;
-    setUserProfile({
-      ...userProfile,
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      department: formData.department
+    // Appel API PATCH pour mettre à jour Nom et email
+    updateUser(userProfile.id, {
+      Nom: formData.name,
+      email: formData.email
+    }).then((data) => {
+      setUserProfile({
+        ...userProfile,
+        name: data.Nom,
+        email: data.email,
+        phone: userProfile.phone,
+        department: userProfile.department
+      });
+      // Synchronise le nom et l'icône dans le localStorage pour la navbar
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('userNom', data.Nom);
+        if (userProfile.icon) {
+          window.localStorage.setItem('userIcon', String(userProfile.icon));
+        }
+      }
+      setIsEditing(false);
     });
-    setIsEditing(false);
   }
 
   const handleCancel = () => {
@@ -115,6 +159,18 @@ export default function ProfilPage() {
   // Ajoute le calcul du nombre total de calculs
   const totalCalculs = userProfile ? userProfile.calculationsCount : 0;
 
+  const handleDeleteAccount = async () => {
+    if (!userProfile) return;
+    setDeleteError('');
+    try {
+      await deleteUser(userProfile.id, deletePassword);
+      window.localStorage.clear();
+      window.location.href = '/register';
+    } catch (err) {
+      setDeleteError('Mot de passe incorrect ou erreur serveur.');
+    }
+  };
+
   if (!userProfile) {
     return <div className="flex items-center justify-center h-full">Chargement du profil...</div>;
   }
@@ -137,7 +193,20 @@ export default function ProfilPage() {
               <div className="flex items-start gap-6 mb-6 hover:text-white">
                 <div className="relative">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
-                    {userProfile.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {(() => {
+                      switch(userProfile.icon) {
+                        case 1: return <ProfileIcon1 />;
+                        case 2: return <ProfileIcon2 />;
+                        case 3: return <ProfileIcon3 />;
+                        case 4: return <ProfileIcon4 />;
+                        case 5: return <ProfileIcon5 />;
+                        case 6: return <ProfileIcon6 />;
+                        case 7: return <ProfileIcon7 />;
+                        case 8: return <ProfileIcon8 />;
+                        case 9: return <ProfileIcon9 />;
+                        default: return <PersonIcon />;
+                      }
+                    })()}
                   </div>
                   <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
@@ -159,7 +228,7 @@ export default function ProfilPage() {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                     />
                   ) : (
                     <p className="text-gray-900 py-2">{userProfile.name}</p>
@@ -172,7 +241,7 @@ export default function ProfilPage() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                     />
                   ) : (
                     <p className="text-gray-900 py-2 break-words truncate max-w-full" style={{wordBreak: 'break-word', overflowWrap: 'break-word'}}>{userProfile.email}</p>
@@ -198,7 +267,7 @@ export default function ProfilPage() {
                 {/* Statistiques et informations additionnelles */}
                 <div className="space-y-6  pt-6 ">
                   {/* Statistiques */}
-                  <div className="bg-white rounded-2xl shadow-sm p-6  text-gray-900 transition-colors duration-200">
+                  <div className="bg-white rounded-2xl shadow-sm p-6 text-gray-900 transition-colors duration-200 border-2 border-[#1C274D]">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 ">Statistiques</h3>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
@@ -207,7 +276,9 @@ export default function ProfilPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Membre depuis</span>
-                        <span className="text-sm font-medium text-gray-900">{userProfile.createdAt}</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {userProfile.createdAt ? new Date(userProfile.createdAt).toISOString().slice(0, 10).replace(/-/g, '/'): ''}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -215,18 +286,8 @@ export default function ProfilPage() {
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:border-[#1C274D]">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
                     <div className="space-y-3">
-                      <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-100 border border-gray-200 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-blue-600 text-sm">🔒</span>
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 ">Changer le mot de passe</p>
-                            <p className="text-xs text-gray-500">Sécurisez votre compte</p>
-                          </div>
-                        </div>
-                      </button>
-                      <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-red-50 border border-red-200 transition-colors text-red-600">
+                      {/* Bouton changer le mot de passe supprimé */}
+                      <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-red-50 border border-red-200 transition-colors text-red-600" onClick={() => setIsDeleteModalOpen(true)}>
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                             <span className="text-red-600 text-sm">🗑️</span>
@@ -237,6 +298,26 @@ export default function ProfilPage() {
                           </div>
                         </div>
                       </button>
+                      {isDeleteModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+    <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
+      <h2 className="text-xl font-bold mb-4 text-gray-900">Supprimer le compte</h2>
+      <p className="mb-2 text-gray-700">Pour supprimer votre compte, veuillez entrer votre mot de passe :</p>
+      <input
+        type="password"
+        value={deletePassword}
+        onChange={e => setDeletePassword(e.target.value)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900 mb-2"
+        placeholder="Mot de passe"
+      />
+      {deleteError && <p className="text-red-500 text-sm mb-2">{deleteError}</p>}
+      <div className="flex gap-2 justify-end mt-2">
+        <button type="button" onClick={() => { setIsDeleteModalOpen(false); setDeletePassword(''); setDeleteError(''); }} className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300">Annuler</button>
+        <button type="button" onClick={handleDeleteAccount} className="px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700">Supprimer</button>
+      </div>
+    </div>
+  </div>
+)}
                     </div>
                   </div>
                 </div>

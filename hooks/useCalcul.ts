@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useCalculStore } from '@/store/calculStore'
-import { computeChain } from '@/lib/calculs'
+import { computeExp, computeLn, computeSqrt, computeSquare, computeDeg, computeRad, computeChain, computePi, computeAbs, computePercent, computeLog } from '@/lib/calculs';
 
 export const useCalcul = () => {
   const { display, apiResult, history, setDisplay, setApiResult, addHistory, clearHistory } = useCalculStore()
   const [pressedKey, setPressedKey] = useState<string | null>(null)
 
   const buttons = [
-    ['C', 'CE', '(', ')', '√', 'x²'],
-    ['sin', 'cos', 'tan', 'ln', 'log', '^'],
+    ['C', 'CE', '(', ')', 'x²'],
+    ['sin', '^'],
     ['7', '8', '9', '/', 'π', 'e'],
-    ['4', '5', '6', '×', 'deg', 'rad'],
-    ['1', '2', '3', '-', 'abs', '%'],
+    ['4', '5', '6', '×'],
+    ['1', '2', '3', '-', '%'],
     ['0', '.', '=', '+', 'ans', '×']
   ]
 
@@ -19,91 +19,237 @@ export const useCalcul = () => {
     addHistory({ expression, result: calculatedResult })
   }
 
-  const handleButtonClick = (value: string) => {
-    setPressedKey(value)
-    setTimeout(() => setPressedKey(null), 150)
-    
-    let newDisplay = display
-    
+  const handleButtonClick = async (value: string) => {
+    let newDisplay = display;
     switch (value) {
       case 'C':
-        newDisplay = '0'
-        setDisplay(newDisplay)
-        setApiResult('')
-        return
+        setDisplay('0');
+        setApiResult('');
+        setPressedKey(value);
+        setTimeout(() => setPressedKey(null), 150);
+        return;
       case 'CE':
-        newDisplay = '0'
-        setDisplay(newDisplay)
-        setApiResult('')
+        setDisplay('0');
+        setApiResult('');
+        setPressedKey(value);
+        setTimeout(() => setPressedKey(null), 150);
+        return;
+      case 'log':
+        // Call backend for decimal logarithm calculation
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToLog = Number(display)
+          if (!isNaN(valueToLog)) {
+            const data = await computeLog({ x: valueToLog, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`log10(${display})`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
+        }
         return
       case '=':
-        handleCompute()
+        await handleCompute()
         return
       case 'sin':
-      case 'cos':
-      case 'tan':
-      case 'ln':
-      case 'log':
+        if (display === '0') {
+          newDisplay = 'sin('
+        } else {
+          newDisplay = display + 'sin('
+        }
+        break
       case 'abs':
-        if (display === '0') {
-          newDisplay = value + '('
-        } else {
-          newDisplay = display + value + '('
+        // Call backend for absolute value calculation
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToAbs = Number(display)
+          if (!isNaN(valueToAbs)) {
+            const data = await computeAbs({ value: valueToAbs, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`abs(${display})`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
         }
-        break
+        return
       case '√':
-        if (display === '0') {
-          newDisplay = '√('
-        } else {
-          newDisplay = display + '√('
+        // Call backend for square root calculation
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToSqrt = Number(display)
+          if (!isNaN(valueToSqrt)) {
+            const data = await computeSqrt({ value: valueToSqrt, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`√(${display})`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
         }
-        break
+        return
       case 'x²':
-        newDisplay = display + '²'
-        break
+        // Call backend for square calculation
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToSquare = Number(display)
+          if (!isNaN(valueToSquare)) {
+            const data = await computeSquare({ value: valueToSquare, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`${display}²`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
+        }
+        return
       case '^':
         newDisplay = display + '^'
         break
       case 'π':
-        if (display === '0') {
-          newDisplay = 'π'
-        } else {
-          newDisplay = display + 'π'
+        // Call backend for pi value
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const data = await computePi({ userId })
+          if (typeof data.result !== 'undefined') {
+            setApiResult(String(data.result))
+            addToHistory('π', String(data.result))
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
         }
-        break
+        return
       case 'e':
-        if (display === '0') {
-          newDisplay = 'e'
-        } else {
-          newDisplay = display + 'e'
+        // Call backend for exponential calculation
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToExp = Number(display)
+          if (!isNaN(valueToExp)) {
+            const data = await computeExp({ value: valueToExp, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`exp(${display})`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
         }
-        break
+        return
       case 'deg':
+        // Call backend for radians to degrees conversion
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToConvert = Number(display)
+          if (!isNaN(valueToConvert)) {
+            const data = await computeDeg({ value: valueToConvert, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`deg(${display})`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
+        }
+        return
       case 'rad':
-        // Mode degrés/radians - à implémenter
-        console.log('Mode:', value)
+        // Call backend for degrees to radians conversion
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToConvert = Number(display)
+          if (!isNaN(valueToConvert)) {
+            const data = await computeRad({ value: valueToConvert, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`rad(${display})`, String(data.result))
+            } else {
+              setApiResult('')
+            }
+          } else {
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
+        }
         return
       case '%':
-        newDisplay = display + '%'
-        break
-      case 'ans':
-        if (apiResult) {
-          if (display === '0') {
-            newDisplay = apiResult
+        // Call backend for percentage calculation
+        try {
+          const userIdStr = typeof window !== 'undefined' ? window.localStorage.getItem('userId') : null
+          const userId = userIdStr ? Number(userIdStr) : undefined
+          const valueToPercent = Number(display)
+          if (!isNaN(valueToPercent)) {
+            const data = await computePercent({ x: valueToPercent, userId })
+            if (typeof data.result !== 'undefined') {
+              setApiResult(String(data.result))
+              addToHistory(`${display}%`, String(data.result))
+            } else {
+              setApiResult('')
+            }
           } else {
-            newDisplay = display + apiResult
+            setApiResult('')
+          }
+        } catch (e) {
+          setApiResult('')
+        }
+        return
+      case 'ans':
+        if (apiResult !== null && apiResult !== undefined) {
+          if (display === '0') {
+            newDisplay = String(apiResult);
+          } else {
+            newDisplay = display + String(apiResult);
           }
         }
         break
       default:
         if (display === '0' && !isNaN(Number(value))) {
-          newDisplay = value
+          newDisplay = value;
         } else {
-          newDisplay = display + value
+          newDisplay = display + value;
         }
     }
-    
-  setDisplay(newDisplay)
+    setDisplay(newDisplay);
+    setPressedKey(value);
+    setTimeout(() => setPressedKey(null), 150);
   }
 
   // Calcul via backend

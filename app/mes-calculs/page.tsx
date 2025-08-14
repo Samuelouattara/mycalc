@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { useResponsive } from '@/hooks/useResponsive';
 import { getUserCalculationHistory } from '@/lib/calculs';
 
@@ -95,11 +96,38 @@ export default function Page() {
     }
   };
 
+  const handleExport = () => {
+    if (!calculations || calculations.length === 0) return;
+    // Générer le fichier Excel (.xlsx)
+    const worksheet = XLSX.utils.json_to_sheet(calculations);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Calculs');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mes_calculs.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className={`w-full ${isMobile ? 'min-h-screen px-4 pt-4 pb-24' : 'p-6'}`}>
+    <div className={`w-full relative ${isMobile ? 'min-h-screen px-4 pt-4 pb-24' : 'p-6'}`}>
       {/* Header avec statistiques */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Mes Calculs</h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-3xl font-bold text-gray-900">📊 Mes Calculs</h1>
+          <button
+            onClick={handleExport}
+            className="bg-[#1C274D] text-white px-6 py-2 rounded-xl shadow-lg font-semibold hover:bg-[#162040] transition-all"
+          >
+            Exporter mes données
+          </button>
+        </div>
+
         <div className="flex items-center gap-4 text-sm text-gray-600">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
@@ -117,21 +145,24 @@ export default function Page() {
       {/* Filtres d'opérateurs */}
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtrer par opérateur</h3>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {kpiOperators.map(op => (
             <button
               key={op}
               onClick={() => handleOperatorChange(op)}
               className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 ${
-                selectedOperator === op 
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
-                  : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                op === 'all'
+                  ? 'bg-[#1C274D] text-white shadow-lg hover:bg-[#162040]'
+                  : selectedOperator === op 
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
+                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
               }`}
             >
               <span className="text-lg">{operatorIcons[op]}</span>
               <span>{operatorLabels[op]}</span>
             </button>
           ))}
+    {/* Bouton exporter retiré de cette section, déplacé en haut */}
         </div>
       </div>
 
@@ -195,7 +226,6 @@ export default function Page() {
               >
                 ← Précédent
               </button>
-              
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(5, Math.ceil(total / pageSize)) }, (_, i) => {
                   const pageNum = i + 1;
@@ -214,7 +244,6 @@ export default function Page() {
                   );
                 })}
               </div>
-              
               <button
                 onClick={() => setPage(Math.min(Math.ceil(total / pageSize), page + 1))}
                 disabled={page === Math.ceil(total / pageSize)}
@@ -224,6 +253,9 @@ export default function Page() {
               </button>
             </div>
           )}
+
+        {/* Bouton exporter toujours visible en haut à droite */}
+   
         </div>
       ) : (
         <div className="text-center py-12">

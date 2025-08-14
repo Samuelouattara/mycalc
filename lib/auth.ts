@@ -1,3 +1,8 @@
+// Met à jour les infos utilisateur (Nom, email, password)
+export async function updateUser(userId: number | string, payload: { Nom?: string; email?: string; password?: string }) {
+	const { data } = await api.patch(`/users/update/${userId}`, payload);
+	return data;
+}
 import api from '@/lib/apiClient';
 import { LoginResponseDto, LoginUserDto, RegisterUserDto, UserDto, TopUserDto, CalculTypesStatsDto } from '@/type/auth';
 

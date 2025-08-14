@@ -231,27 +231,7 @@ export default function SideBar() {
                         })}
                     </div>
 
-                    {/* General Section */}
-                    {((isMobile && isExpanded) || (!isMobile && !isCollapsed)) && (
-                        <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-4">GENERAL</p>
-                    )}
-                    <div className="space-y-1">
-                        {generalItems.map((item) => {
-                            const isActive = pathname === item.href || pathname.startsWith(item.href);
-
-                            return (
-                                <LinkSidebar
-                                    key={item.id}
-                                    href={item.href}
-                                    label={item.label}
-                                    icon={item.icon}
-                                    isActive={isActive}
-                                    isCollapsed={(isMobile && !isExpanded) || (!isMobile && isCollapsed)}
-                                    onClick={handleLinkClick}
-                                />
-                            );
-                        })}
-                    </div>
+                    {/* Section GENERAL et Settings supprimées */}
                 </div>
             </div>
         </>
